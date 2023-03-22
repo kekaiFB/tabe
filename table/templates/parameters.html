@@ -1,0 +1,51 @@
+<div class="container-fluid alert alert-primary settingDiv">
+    <div class="row">
+      <div class="col-sm checkColumn">
+        <div><label><input type="checkbox" class="toggle-vis btn" data-column="0" id="hideID">ID</label></div>
+        <div><label><input type="checkbox" class="toggle-vis btn" data-column="1">Смена</label></div>
+        <div><label><input type="checkbox" class="toggle-vis btn" data-column="2">Служба</label></div>
+        <div><label><input type="checkbox" class="toggle-vis btn" data-column="3">Должность</label></div>
+        <div><label><input type="checkbox" class="toggle-vis btn" data-column="4">Сотрудник</label></div>
+        <div><label><input type="checkbox" class="toggle-vis btn" data-column="5">Причина</label></div>
+      </div>
+      <div class="col-sm checkColumn">
+        <div><label><input type="checkbox" class="toggle-vis btn" data-column="6">Примечание</label></div>
+        <div><label><input type="checkbox" class="toggle-vis btn" data-column="7">Продолжительность</label></div>
+        <div><label><input type="checkbox" class="toggle-vis btn" data-column="8">Начало</label></div>
+        <div><label><input type="checkbox" class="toggle-vis btn" data-column="9">Окончание</label></div>
+        <div><label><input type="checkbox" class="toggle-vis btn" data-column="10">Изменить</label></div>
+        <div><label><input type="checkbox" class="toggle-vis btn" data-column="11" id="hideDeleteRowButton">Удалить</label></div>
+      </div>
+      <div class="col-sm-1"></div>
+      <div class="col-sm">
+        <div class="">
+            <div class="form-group">
+                <label>От</label>
+                <input type="date" id="minDate"
+                    class="form-control" >
+            </div>
+            <div class="form-group">
+                <label>До</label>
+                <input type="date" id="maxDate"
+                    class="form-control">
+            </div>  
+            <button id="ButtonDateFilter" type="button" class="btn btn-success mt-2">Отфильтровать даты</button>
+        </div>
+      </div>
+
+      <div class="col-sm-1 relativeDate">
+        <button type="button" class="btn btn-warning mt-2" value ="1" name="isoWeek">Прошлая неделя</button>
+        <button type="button" class="btn btn-warning mt-2" value ="1" name="month">Прошлый месяц</button>
+        <button type="button" class="btn btn-warning mt-2" value ="1" name="quarter">Прошлый квартал</button>
+        <button type="button" class="btn btn-warning mt-2" value ="1" name="year">Прошлый год</button>
+      </div>
+      <div class="col-sm-1 relativeDate">
+        <button type="button" class="btn btn-warning mt-2" value ="0" name="isoWeek">Текущая неделя</button>
+        <button type="button" class="btn btn-warning mt-2" value ="0" name="month">Текущий месяц</button>
+        <button type="button" class="btn btn-warning mt-2" value ="0" name="quarter">Текущий квартал</button>
+        <button type="button" class="btn btn-warning mt-2" value ="0" name="year">Текущий год</button>
+      </div>
+      
+          <div class="col-sm-5"></div>
+    </div>
+</div>

@@ -1,0 +1,85 @@
+{% load table_tags %}
+
+{% for elem in snj %}  
+    <tr class="mySelect">  
+    <td>{{ elem.id }}</td>  
+    <td>{{ elem.shift }}</td> 
+    <td>{{ elem.office }}</td> 
+    <td>{{ elem.post }}</td> 
+    <td>{{ elem.human }}</td>  
+    <td>{{ elem.reason }}</td>  
+    <td>{{ elem.comment }}</td> 
+
+    {% if elem.length_time %}
+        <td>
+            {{ elem.length_time }}
+        </td>
+    {% else %}
+        <style>
+            td.notfound {
+            background-color: pink;
+            }
+        </style>
+        <td class="notfound">
+            {% now 'Y-m-d' as current_date %}
+            {% with date_start=elem.date_start|date:'Y-m-d' %}     
+                {% different_date current_date date_start %}
+            {% endwith %}
+        </td>
+    {% endif %}
+ 
+    <td>{{ elem.date_start|date:'Y-m-d' }}</td>
+
+    {% if elem.date_end %}
+        <td>
+            {{ elem.date_end |date:'Y-m-d'}}
+        </td>    
+    {% else %}
+        <style>
+            td.notfound {
+            background-color: pink;
+            }
+        </style>
+        <td class="notfound">
+            {% now 'Y-m-d' %}
+        </td>   
+    {% endif %}  
+
+    <td> 
+        {% if request.user.is_authenticated %}
+            {% if perms.foo %}
+            <button type="button"
+                    class="editSpan btn btn-outline-success"
+                    data-url="{% url 'table:edit' elem.id %}">
+                <span class="glyphicon glyphicon-pencil"></span> Изменить
+            </button>
+            {% else %}
+            <li class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Недостаточно прав">
+                <button type="button"
+                    class="btn btn-outline-success"
+                    style="pointer-events: none;" disabled>
+                <span class="glyphicon glyphicon-pencil"></span> Изменить
+                </button>
+            </li>
+            {% endif %}
+        {% else %}
+        <li class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Требуется авторизация">
+            <button type="button"
+                class="btn btn-outline-success"
+                style="pointer-events: none;" disabled>
+            <span class="glyphicon glyphicon-pencil"></span> Изменить
+            </button>
+        </li>
+        {% endif %}
+        
+        
+    </td> 
+    <td>
+        <form method="POST" action="{% url 'table:destroy' elem.id %}">
+            {% csrf_token %} 
+            <input class="btn btn-danger delete_confirm" 
+            type="submit" value="Удалить">
+        </form>
+    </td>
+    </tr>  
+{% endfor %}
