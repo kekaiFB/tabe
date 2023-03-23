@@ -1,5 +1,3 @@
 db.sqlite3
-migrations/
-*.pyc
 commands.txt
 data_dump.json
