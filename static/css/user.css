@@ -1,0 +1,9 @@
+.last {
+    margin: 0;
+    float: right;
+    list-style: none;
+}
+
+.last span, a {
+    font-size: 130%;
+}

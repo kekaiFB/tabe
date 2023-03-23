@@ -101,7 +101,7 @@ class ScheduleNotJob(models.Model):
     def __str__(self):
         return str(self.human)
 
-
+'''
 @receiver(post_save, sender=ScheduleNotJob)
 def update_date_snj(sender, instance, **kwargs):
     if instance.length_time:
@@ -113,3 +113,4 @@ def update_date_snj(sender, instance, **kwargs):
     else:
          sender.objects.filter(pk=instance.id).update(date_end=None)
 
+'''
