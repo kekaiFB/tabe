@@ -165,3 +165,13 @@ def destroy(request, id):
     snj = ScheduleNotJob.objects.get(id=id)  
     snj.delete()  
     return HttpResponseRedirect(reverse('table:index'))  
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+
+
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+

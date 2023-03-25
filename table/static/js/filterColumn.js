@@ -14,13 +14,13 @@ $('#bootstrapdatatable thead tr')
 .appendTo('#bootstrapdatatable thead');
 
 // DataTable
+var dataMyTable;
 var table = $('#bootstrapdatatable').DataTable({
-    
+    deferRender: true,
     orderCellsTop: true,
     fixedHeader: true,
     
-    deferRender:    true,
-    scrollX:        500,    
+    deferRender: true,
 
     columnDefs: [
         {
@@ -32,9 +32,43 @@ var table = $('#bootstrapdatatable').DataTable({
     "aLengthMenu": [[3, 7, 10, 25, -1], [3, 7, 10, 25, "All"]],
     "iDisplayLength": 7,
     
-    
-    initComplete: function () {
+    //--------------------Память фильторв---------------------------
+    select: true,
+    dom: 'Bfrtip',
+    language:{
+        stateRestore: {
+            removeSubmit: 'Удалить',
+            removeConfirm: 'Вы действительно хотите удалить %s?',
+            emptyStates: 'Нет состояний',
+            renameButton: 'Переименовать',
+            renameLabel: '',
+            removeTitle: '',
+            renameTitle: '',
+        },
+        buttons: {
+            createState: 'Создать состояние',
+            savedStates: 'Сохраненные состояния',
+            updateState: 'Обновить',
+            stateRestore: 'Новое состояние %d',
+            removeState: 'Удалить',
+            renameState: 'Переименовать',
 
+        }},
+    buttons: ['createState', 'savedStates'],
+    
+    stateSaveParams: function (s, data) {
+        data.min = $("#minDate").val();
+        data.max = $("#maxDate").val();
+    },
+    stateLoadParams: function (s, data) {
+        $("#minDate").val(data.min);
+        $("#maxDate").val(data.max);
+    },
+
+      
+   //---------------Конец Память фильторв конец-------------------
+   
+    initComplete: function () {
         var api = this.api();
         api
                 .columns()
@@ -117,14 +151,14 @@ var table = $('#bootstrapdatatable').DataTable({
                .sort()
                .each(function (d, j) {
                    select.append('<option value="' + d + '">' + d + '</option>');
-               });
+               });     
        });
-            
+       
     },
 
 });
 
-
+    
      //Скрыть столбцы
     $('.checkColumn input:checkbox').click(function(){
         var column = table.column($(this).attr('data-column'));
@@ -145,23 +179,22 @@ var table = $('#bootstrapdatatable').DataTable({
     //Сбросить фильтры
     $('#resetFilter').on('click', function (e) {
         resetFilters()
-        resetFilters()
     });
 
 
 
     function resetFilters() {
-        /*
-        table.column($(this).data('col-index')).search('', false, false);
-        table.columns().search("").draw();
-        $("input").val("");
-        $(".delete_confirm").val("Удалить");
-        $('select').prop('selectedIndex',0);
-        $('span.toggle-vis').removeClass('btn-warning');
+        //table.search( '' ).columns().search( '' ).draw();
+        //table.column($(this).data('col-index')).search('', false, false);
+        //table.columns().search("").draw();
+        //$("input").val("");
+        //$(".delete_confirm").val("Удалить");
+        //$('select').prop('selectedIndex',0);
+        //$('span.toggle-vis').removeClass('btn-warning');
 
         
         //скрываем по умолчанию ID и УДАЛИТЬ
-        for ( var i=0 ; i<=$("#bootstrapdatatable tr").length+1 ; i++ ) {
+      /*  for ( var i=0 ; i<=$("#bootstrapdatatable tr").length+1 ; i++ ) {
             table.column(i).visible() === true ? '' : table.column(i).visible( true )
         }
 
@@ -171,7 +204,10 @@ var table = $('#bootstrapdatatable').DataTable({
         */
         location.reload()
     }
-    
+
+
+
+
     //Выбор строки при наведении 
      $(function() {
         $('#bootstrapdatatable')
@@ -288,11 +324,6 @@ var table = $('#bootstrapdatatable').DataTable({
         $("#maxDate").val(maxDate);
     });
     
-    
-
-    //если отсутствует дата окончания и продолжительность то высчитываем
-    console.log($('.notfound').val())
-
     $("body").css("opacity", 1);
 });
 
