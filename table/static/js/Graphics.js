@@ -1,18 +1,21 @@
 //https://datatables.net/blog/2020-10-01
 //https://code.tutsplus.com/ru/tutorials/getting-started-with-chartjs-line-and-bar-charts--cms-28384
-function chartData(table) {
+function chartData(table, reason='') {
     var counts = {};
+    table.rows({ search: 'applied' }).data().each(function (val) {
+        if (!counts[val[4]]) {
+            counts[val[4]] = 0;
+        } 
+    });
 
     table.rows({ search: 'applied' }).data().each(function (val) {
-
-        if (counts[val.slice(4,5)]) {
-            counts[val.slice(4,5)] += parseInt(val[7]);
-        } else {
-            counts[val.slice(4,5)] = parseInt(val[7]);
+        if (reason != ''){
+            if (val[5] == reason) {
+                counts[val[4]] += parseInt(val[7]);
+            }
         }
     });
 
-    // And map it to the format highcharts uses
     return $.map(counts, function (val, key) {
         return {
             label: key,
@@ -24,17 +27,22 @@ function chartData(table) {
 
 function chartDataOffice(table) {
     var counts = {};
- 
-    // Count the number of entries for each office
+    var human;
+    human = table.column(4).data().unique().toArray();
+
+    //находим уникальных сотрундников, их офис, и считаем повторения такого офиса
     table.rows({ search: 'applied' }).data().each(function (val) {
-        if (counts[val[2]]) {
-            counts[val[2]] += parseInt(val[7]);
-        } else {
-            counts[val[2]] = parseInt(val[7]);
-        }
+        if ( human.includes(val[4]))
+        {
+            if (counts[val[2]]) {
+                counts[val[2]] += 1;
+            } else {
+                counts[val[2]] = 1;
+            }
+           human = human.filter(function(f) { return f !== val[4] })
+        };   
     });
- 
-    // And map it to the format highcharts uses
+
     return $.map(counts, function (val, key) {
         return {
             label: key,
@@ -42,13 +50,13 @@ function chartDataOffice(table) {
         };
     });
 }
-
+ 
 
 
 
 function chartDataDate(table) {
-    var startDate = moment('2023-01-01');
-    var endDate = moment('2024-01-01');
+    var startDate = moment().subtract(0, 'year').startOf('year').format('YYYY-MM-DD');
+    var endDate = moment().subtract(-1, 'year').startOf('year').format('YYYY-MM-DD');
     var date = [];
 
     for (var m = moment(startDate); m.isBefore(endDate+1); m.add(1, 'days')) {
@@ -74,7 +82,6 @@ function chartDataDate(table) {
 
  
     return $.map(counts, function (val, key) {
-       
         return {
             label: key,
             value: val,
@@ -84,9 +91,8 @@ function chartDataDate(table) {
 
 
 function month(table, reason) {
-    
-    var startDate = moment('2023-01-01');
-    var endDate = moment('2023-12-31');
+    var startDate = moment().subtract(0, 'year').startOf('year').format('YYYY-MM-DD');
+    var endDate = moment().subtract(-1, 'year').startOf('year').format('YYYY-MM-DD');
     var date = [];
 
     for (var m = moment(startDate); m.isBefore(endDate+1); m.add(1, 'days')) {
@@ -101,7 +107,13 @@ function month(table, reason) {
     for (var i = 0; i<date.length; i++) {
         table.rows({ search: 'applied' }).data().each(function (val) {
             var thisdate = date[i];
-            if (val[5] == reason) {
+            if (reason != '') {
+                if (val[5] == reason) {
+                    if (thisdate >= val[8] && thisdate <= val[9]){
+                        counts[thisdate] += 1; 
+                    } 
+                }
+            } else {
                 if (thisdate >= val[8] && thisdate <= val[9]){
                     counts[thisdate] += 1; 
                 } 
@@ -126,6 +138,7 @@ function month(table, reason) {
 
 function chartDataMonth(table, reason = '') {
     var data = month(table, reason);
+
     var count = {};
 
     data.map( function( value, key ) {
@@ -140,8 +153,7 @@ function chartDataMonth(table, reason = '') {
     data.map( function( value, key ) {
         var key = value['label']
         var value = value['value']
-        count[key] += value;
-        
+        count[key] += value;    
     });
 
     
@@ -156,6 +168,80 @@ function chartDataMonth(table, reason = '') {
             value: val,
         };
     });
-    
 }
 
+
+var rgbaColor;
+
+//рандомненое число для rgb
+function colorGen () { 
+  var generateColor = Math.floor(Math.random() * 256 );
+  return generateColor;
+}
+
+
+
+//датасет для графика
+function getDataset(title, data) {
+  rgbaColor = 'rgba(' + colorGen() + ',' + colorGen() + ',' + colorGen() + ', ';
+  return { 
+    label: title + '. Пропуски',
+    data: data,
+    backgroundColor: rgbaColor + ' 0.2)',
+    borderColor: rgbaColor + ' 1)',
+    borderWidth: 1, 
+  }; 
+}
+
+function reasonGraphicMonth(table) {
+    var datasets = []
+    var value;
+
+    //ищем все причины пропуска работы
+    var reason =  table
+    .column(5)
+    .data()
+    .unique();
+    
+    //ищем для каждой причины количество пропусков и добавляем в датасет
+    reason.map( function(reas) {
+        value = chartDataMonth(table, reas).map( function( value ) {
+            return value['value']
+        }) 
+        datasets.push(getDataset(reas, value));     
+    });
+
+    return datasets
+}
+
+
+
+function reasonGraphicHuman(table) {
+    var datasets = []
+    var value;
+
+    //ищем все причины пропуска работы
+    var reason =  table
+    .column(5)
+    .data()
+    .unique();
+    
+    //ищем для каждой причины количество пропусков по сотруднику и добавляем в датасет
+    reason.map( function(reas) {
+        value = chartData(table, reas).map( function( value ) {
+            return value['value']
+        }) 
+        datasets.push(getDataset(reas, value));     
+    });
+    return datasets
+}
+
+function addMonthOfDay(elem) {
+    var monthNames = [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ]; 
+    var month= new Date(elem).getMonth();
+    return elem + ';' + monthNames[month]
+}
+
+function getMonthOfDayArray(array) {
+    return array.map(addMonthOfDay);   
+}

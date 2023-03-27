@@ -55,7 +55,6 @@ var table = $('#bootstrapdatatable').DataTable({
 
         }},
     buttons: ['createState', 'savedStates'],
-    
     stateSaveParams: function (s, data) {
         data.min = $("#minDate").val();
         data.max = $("#maxDate").val();

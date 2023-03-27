@@ -1,0 +1,228 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
+<script>
+    $(".single-item").slick({
+        dots: false,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 2,
+        slidesToScroll: 1, 
+        rows: 2,
+        
+    }); 
+
+
+    var myChart1;
+    var label1, value1, datasets1=[]; 
+    const ctx1 = document.getElementById('oneChart').getContext('2d');
+
+    var myChart2;
+    var label2, value2; 
+    const ctx2 = document.getElementById('twoChart').getContext('2d');
+
+    var myChart3;
+    var label3, value3; 
+    const ctx3 = document.getElementById('threeChart').getContext('2d');
+
+
+    var myChart4;
+    var label4, value4, datasets4=[]; 
+    const ctx4 = document.getElementById('fourChart').getContext('2d');
+
+
+    function drawTable (table) {
+
+
+    //ПЕРВЫЙ ГРАФИК
+    label1 = chartData(table).map( function( value ) {
+        return value['label']
+    });
+    datasets1 = reasonGraphicHuman(table); 
+
+
+
+    //ВТОРОЙ ГРАФИК
+    label2 = chartDataOffice(table).map( function( value ) {
+        return value['label']
+    });
+
+    value2 = chartDataOffice(table).map( function( value ) {
+        return value['value']
+    })   
+
+
+
+    //ТРЕТИЙ ГРАФИК
+    label3 = chartDataDate(table).map( function( value ) {
+        return value['label']
+    });
+    label3 = getMonthOfDayArray(label3)
+
+    value3 = chartDataDate(table).map( function( value ) {
+        return value['value']
+    })   
+
+     
+
+    //ЧЕТВЕРТЫЙ ГРАФИК
+    label4 = chartDataMonth(table).map( function( value ) {
+        return value['label']
+    });
+    datasets4 = reasonGraphicMonth(table);
+
+}
+
+    function init() {
+    
+        //ПЕРВЫЙ ГРАФИК
+        myChart1 = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels : label1,
+                datasets: datasets1
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Пропуски по сотрудникам',
+                        font: {
+                            size: 20
+                          }
+                    },
+                    legend: {
+                        display: false 
+                    },
+                },
+                
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        })
+        
+
+        //ВТОРОЙ ГРАФИК
+        myChart2 = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels : label2,
+                datasets: [{
+                    label: "Количество сотрудников",
+                    data : value2,
+                    backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(75, 0, 192, 0.2)'],
+                    borderColor: ['rgba(75, 192, 192, 0.2)', 'rgba(75, 0, 192, 0.2)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Пропуски по подразделениям',
+                        font: {
+                            size: 20
+                          }
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        })
+
+
+
+        //ТРЕТИЙ ГРАФИК
+        myChart3 = new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                datasets: [{
+                    label: "Количество дней",
+                    data : value3,
+                    backgroundColor: 'rgba(75, 192, 50, 0.2)',
+                    borderColor: 'rgba(75, 192, 50, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Пропуски по дням',
+                        font: {
+                            size: 20
+                          }
+                    }
+                },
+                scales: {
+                    x: {
+                        labels : label3.map((elem) => elem.split(';')[0]),
+                    },
+                    x2: {
+                        labels :  [...new Set(label3.map((elem) => elem.split(';')[1]))] ,
+
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            reverse: false,
+                            stepSize: 1
+                          },
+                    },
+                    
+                }
+            }
+        })
+     
+
+        
+        //ЧЕТВЕРТЫЙ ГРАФИК
+        myChart4 = new Chart(ctx4, {
+            type: 'bar',
+            data: {
+                labels : label4,
+                datasets: datasets4,
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Пропуски по месяцам',
+                        font: {
+                            size: 20
+                          }
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        })
+
+
+    }
+    
+    function toggleChart() {
+    myChart1.destroy();
+    myChart2.destroy();
+    myChart3.destroy();
+    myChart4.destroy();
+    init();
+    }
+
+</script>

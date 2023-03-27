@@ -46,3 +46,24 @@ $(document).ready(function(){
     $("#bootstrapdatatable").on("click", ".editSpan", loadForm);
     $("#modal-product").on("submit", ".js-product-add-form", saveForm);
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+  
+
+    
