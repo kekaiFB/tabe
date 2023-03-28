@@ -110,3 +110,14 @@ svg {
   color: pink;
   font-size: 120%;
 }
+.btn {
+  min-width: 10em;
+}
+
+.userlabelinTable {
+  float: right;
+}
+.userlabelinTable span, a {
+  font-size: 130%;
+}
+

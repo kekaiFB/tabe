@@ -6,23 +6,16 @@
     {% if request.user.is_authenticated %}
         <h4 class="alert alert-success">Вы уже авторизированы</h4>
         <h3>{{user.username}}</h3>
-        <a href="{% url 'user:logout' %}">
-            <button class="btn btn-dark">
-                Выйти
-            </button> 
-        </a>
-        <a href="{% url 'table:index' %}">
-            <button class="mt-2 btn btn-dark">
-                Главная
-            </button> 
-        </a>
+            <a href="{% url 'user:logout' %}">
+                <button class="btn btn-dark">
+                    Выйти
+                </button> 
+            </a>
+         
+        
     {% else %}
-        {% if message %}
-                <p class="alert alert-success">{{ message }}</p>
-        {% endif %}
         <form method="post" class="login-form">
             {% csrf_token %}
-
             <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
                 {% for error in form.non_field_errors %}
                     <p class="m-1 alert alert-warning">{{ error }}</p>
@@ -42,10 +35,13 @@
 
             <input type="hidden" name="next" value="{{ success_url }}">
 
-            <button type="submit" class="btn btn-dark">Войти</button>
+            <button type="submit" class="btn btn-dark">Зарегистрироваться</button>
             
-            <p class="alternate"><a href="{% url 'user:register' %}">Регистрация</a></p>
+            <p class="alternate"><a href="{% url 'user:login' %}">Войти</a></p>
         </form>
     {% endif %}
     
 {% endblock %}
+
+
+

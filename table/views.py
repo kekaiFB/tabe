@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 
 
+@login_required
 def load_ajax_form(request):
     data = dict()
 
@@ -117,13 +118,13 @@ def load_ajax_form(request):
 
     return JsonResponse(data)
 
-
+@login_required
 def index(request):  
     snj = ScheduleNotJob.objects.all()
     form = SNJ()
     return render(request,"index.html",{'snj': snj, 'form':form})  
 
-
+@login_required
 def save_product_form(request, form, template_name):
     data = dict()
     if request.method == 'POST':  
@@ -161,6 +162,7 @@ def edit(request, id):
     return save_product_form(request, form, 'edit.html')
 
 
+@login_required
 def destroy(request, id):  
     snj = ScheduleNotJob.objects.get(id=id)  
     snj.delete()  

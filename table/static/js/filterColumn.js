@@ -311,7 +311,8 @@ var table = $('#bootstrapdatatable').DataTable({
             table.draw();
     });
       
-   //относительные даты 
+   //относительные даты
+   $(".relativeDate button").addClass("btn-secondary"); 
     $(".relativeDate button").click(function () {
         CurrentOrNotDate = parseInt($(this).val())
         typeDate = $(this).attr('name')
@@ -321,7 +322,13 @@ var table = $('#bootstrapdatatable').DataTable({
         
         $("#minDate").val(minDate);
         $("#maxDate").val(maxDate);
+
+        $(".relativeDate button").attr('class', "btn mt-2 btn-secondary");
+        $(this).removeClass("btn-warning");
+        $(this).addClass("btn-warning");
     });
+
+    $('button[value="0"][name="year"]').click();
     
     $("body").css("opacity", 1);
 });

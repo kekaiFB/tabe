@@ -92,10 +92,11 @@ function chartDataDate(table) {
 
 function month(table, reason) {
     var startDate = moment().subtract(0, 'year').startOf('year').format('YYYY-MM-DD');
-    var endDate = moment().subtract(-1, 'year').startOf('year').format('YYYY-MM-DD');
+    var endDate = moment().subtract(0, 'year').endOf('year').format('YYYY-MM-DD')
+
     var date = [];
 
-    for (var m = moment(startDate); m.isBefore(endDate+1); m.add(1, 'days')) {
+    for (var m = moment(startDate); m.isBefore(endDate); m.add(1, 'days')) {
         date.push(m.format('YYYY-MM-DD'));
     }
 
@@ -123,7 +124,6 @@ function month(table, reason) {
 
     }
     
-   
 
     return $.map(counts, function (val, key) {
         return {
@@ -150,6 +150,7 @@ function chartDataMonth(table, reason = '') {
             count[key] = 0;
         }
     });
+
     data.map( function( value, key ) {
         var key = value['label']
         var value = value['value']
@@ -159,7 +160,6 @@ function chartDataMonth(table, reason = '') {
     
     var monthNames = [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ]; 
     
-
     return $.map(count, function (val, key) {
         key= monthNames[0]
         monthNames.shift() 
