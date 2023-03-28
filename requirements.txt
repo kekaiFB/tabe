@@ -12,10 +12,12 @@ django-appconf==1.0.5
 -e git+https://github.com/yourlabs/django-autocomplete-light.git@62ecb5f2200d31c776ccac7bbd06c31c12be58f2#egg=django_autocomplete_light
 django-bootstrap-modal-forms==2.2.1
 django-crispy-forms==2.0
+django-glrm==1.1.3
 django-picklefield==3.1
 django-redis==5.2.0
 django-select2==8.1.0
 django-smart-selects==1.6.0
+django-utils-six==2.0
 django-widget-tweaks==1.4.12
 djhacker==0.2.3
 exceptiongroup==1.1.0
