@@ -48,7 +48,7 @@
   }
 
 .form .alternate {
-    margin: 20px 0 0;
+    margin: 4%;
     font-size: 16px;
   }
 .form .alternate a {
@@ -63,3 +63,12 @@ body {
     background: #3d3d3d; 
     font-family: "Lato", sans-serif;
   } 
+
+
+.lefttPosition {
+  float: left;
+}  
+
+.rightPosition {
+  float: right;
+}  

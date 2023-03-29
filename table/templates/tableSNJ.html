@@ -65,7 +65,7 @@
     <td>
         <form method="POST" action="{% url 'table:destroy' elem.id %}">
             {% csrf_token %} 
-            <input class="btn btn-danger delete_confirm" 
+            <input class="btn btn-outline-danger delete_confirm" 
             type="submit" value="Удалить">
         </form>
     </td>

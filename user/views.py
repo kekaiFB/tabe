@@ -6,6 +6,12 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import get_user_model
 
+from django.core.mail import BadHeaderError
+from django.http import HttpResponse
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import User
+from django.db.models.query_utils import Q
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site  
 from django.utils.encoding import force_bytes  
 from django.utils.encoding import force_str
@@ -16,6 +22,8 @@ from django.core.mail import EmailMessage
   
 
 def registerUserForm(request):
+    if request.user.is_authenticated:
+            return redirect('table:index')
     if request.method == 'POST':
         form = RegisterUserForm(request.POST)
         if form.is_valid():
@@ -43,7 +51,7 @@ def registerUserForm(request):
 class LoginUser(TemplateView, LoginView):
     form = LoginForm
     template_name = 'user/login.html'
-    success_message = 'Success: You were successfully logged in.'
+    success_message = 'Успешный вход в учетныую запись!'
     extra_context = dict(success_url=reverse_lazy('table:index'))
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -52,9 +60,10 @@ class LoginUser(TemplateView, LoginView):
         return context
 
 
-def logout_user(request):
-    logout(request)
-    return redirect('user:login')
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('table:index')
+        return super(LoginUser, self).dispatch(request, *args, **kwargs)
 
 
 class ErrorHandler(TemplateView):
@@ -94,3 +103,31 @@ def activate(request, uidb64, token):
     else:
         message = 'Ссылка активации недействительна!'
         return render(request, 'user/message.html', {'message': message})  
+
+
+def password_reset(request):
+	if request.method == "POST":
+		password_reset_form = PasswordResetForm(request.POST)
+		if password_reset_form.is_valid():
+			data = password_reset_form.cleaned_data['email']
+			associated_users = User.objects.filter(Q(email=data))
+			if associated_users.exists():
+				for user in associated_users:
+					mail_subject = "Сброс пароля на " + str(get_current_site(request).domain)
+					email_template_name = "user/reset/password_reset_email.html"
+					c = {                 
+                    "email":user.email,
+                    'domain': get_current_site(request).domain,
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "user": user,
+                    'token': default_token_generator.make_token(user),
+                    'protocol': 'http',
+					}
+					email = render_to_string(email_template_name, c)
+					try:
+						EmailMessage(mail_subject, email, to=[user.email]).send()
+					except BadHeaderError:
+						return HttpResponse('Непредвинденная ошибка')
+					return redirect('password_reset_done')
+	password_reset_form = PasswordResetForm()
+	return render(request=request, template_name="user/reset/password_reset.html", context={"password_reset_form":password_reset_form})

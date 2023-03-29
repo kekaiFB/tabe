@@ -14,7 +14,6 @@ $('#bootstrapdatatable thead tr')
 .appendTo('#bootstrapdatatable thead');
 
 // DataTable
-var dataMyTable;
 var table = $('#bootstrapdatatable').DataTable({
     deferRender: true,
     orderCellsTop: true,
@@ -33,7 +32,7 @@ var table = $('#bootstrapdatatable').DataTable({
     "iDisplayLength": 7,
     
     //--------------------Память фильторв---------------------------
-    select: true,
+    stateSave: true,
     dom: 'Bfrtip',
     language:{
         stateRestore: {
@@ -183,6 +182,7 @@ var table = $('#bootstrapdatatable').DataTable({
 
 
     function resetFilters() {
+        table.state.clear();
         //table.search( '' ).columns().search( '' ).draw();
         //table.column($(this).data('col-index')).search('', false, false);
         //table.columns().search("").draw();
@@ -226,14 +226,21 @@ var table = $('#bootstrapdatatable').DataTable({
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
 
+            
+            $(this).find('td input.delete_confirm').removeClass("btn-danger");
+            $(this).find('td input.delete_confirm').addClass("btn-outline-danger");
 
             $(this).find('td button').removeClass("btn-success");
-            $(this).find('td.notfound').removeClass('notfoundColor');
             $(this).find('td button').addClass("btn-outline-success");
+            
+            $(this).find('td.notfound').removeClass('notfoundColor');
         } else {
             //удаляю у не выбранных кнопок класс
             table.$('tr.selected').find('td button').removeClass("btn-success");
             table.$('tr.selected').find('td button').addClass("btn-outline-success");
+
+            table.$('tr.selected').find('td input.delete_confirm').removeClass("btn-danger");
+            table.$('tr.selected').find('td input.delete_confirm').addClass("btn-outline-danger");
 
             //удаляю не выбранным и добавляю выбранной строке клас
             table.$('tr.selected').removeClass('selected');
@@ -244,6 +251,9 @@ var table = $('#bootstrapdatatable').DataTable({
             //добавляю выбранной кнопке класс
             $(this).find('td button').removeClass("btn-outline-success");
             $(this).find('td button').addClass("btn-success");
+
+            $(this).find('td input.delete_confirm').removeClass("btn-outline-danger");
+            $(this).find('td input.delete_confirm').addClass("btn-danger");
         }
     });
  
