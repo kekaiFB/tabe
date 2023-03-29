@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from .forms import RegisterUserForm, LoginForm
-from django.contrib.auth import logout
 from django.views.generic.base import TemplateView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import get_user_model
@@ -18,17 +17,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string  
 from .tokens import account_activation_token 
 from django.core.mail import EmailMessage  
-  
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
-from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.auth.models import User
-from django.template.loader import render_to_string
-from django.db.models.query_utils import Q
-from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes
   
 
 def registerUserForm(request):
@@ -70,8 +59,6 @@ class LoginUser(LoginView):
         context['title'] = "Авторизация"
         return context
 
-
-
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('table:index')
@@ -98,7 +85,6 @@ class ErrorHandler(TemplateView):
         response_kwargs.update(status=self.error_code)
         return super().render_to_response(context, **response_kwargs)
     
-
 
 def activate(request, uidb64, token):  
     User = get_user_model()  
