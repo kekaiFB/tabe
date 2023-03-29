@@ -11,7 +11,6 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
-from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site  
 from django.utils.encoding import force_bytes  
 from django.utils.encoding import force_str
@@ -19,6 +18,17 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string  
 from .tokens import account_activation_token 
 from django.core.mail import EmailMessage  
+  
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+from django.db.models.query_utils import Q
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
   
 
 def registerUserForm(request):
@@ -29,6 +39,7 @@ def registerUserForm(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
+            user.username = user.email
             user.save()
             current_site = get_current_site(request)
             mail_subject = 'Активируйте учетную запись'
@@ -48,16 +59,17 @@ def registerUserForm(request):
     return render(request, 'user/register.html', {'form': form})
 
 
-class LoginUser(TemplateView, LoginView):
-    form = LoginForm
+class LoginUser(LoginView):
+    form_class = LoginForm
     template_name = 'user/login.html'
-    success_message = 'Успешный вход в учетныую запись!'
+    success_message = 'Успешный вход в учетную запись!'
     extra_context = dict(success_url=reverse_lazy('table:index'))
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = "Авторизация"
         return context
+
 
 
     def dispatch(self, request, *args, **kwargs):
@@ -130,4 +142,4 @@ def password_reset(request):
 						return HttpResponse('Непредвинденная ошибка')
 					return redirect('password_reset_done')
 	password_reset_form = PasswordResetForm()
-	return render(request=request, template_name="user/reset/password_reset.html", context={"password_reset_form":password_reset_form})
+	return render(request=request, template_name="user/reset/password_reset.html", context={"form":password_reset_form})
