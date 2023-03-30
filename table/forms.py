@@ -2,9 +2,6 @@ from django import forms
 from .models import *
 from django import forms
 
-
-from smart_selects.db_fields import ChainedForeignKey, GroupedForeignKey  
-
 class SNJ(forms.ModelForm):
     shift = forms.ModelChoiceField(
         queryset=Shift.objects.all(),

@@ -143,7 +143,7 @@ def save_product_form(request, form, template_name):
             data['form_is_valid'] = True
             snj = get_snf()
             data['html_product_list'] = render_to_string('table.html', {
-                'snj': SNJ
+                'snj': snj
             })
         else:
             data['form_is_valid'] = False

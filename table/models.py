@@ -122,8 +122,6 @@ def author_post_delete_handler(sender, **kwargs):
 
 @receiver(post_save, sender=ScheduleNotJob)
 def update_date_snj(sender, instance, **kwargs):
-    clear_snj_cache()
-
     if instance.length_time:
         date_end = instance.date_start + timedelta(days=instance.length_time - 1)
         sender.objects.filter(pk=instance.id).update(date_end=date_end.strftime('%Y-%m-%d'))
@@ -132,4 +130,8 @@ def update_date_snj(sender, instance, **kwargs):
         sender.objects.filter(pk=instance.id).update(length_time=length_time + 1)    
     else:
          sender.objects.filter(pk=instance.id).update(date_end=None)
+
+    #очищаем кэщ
+    clear_snj_cache()
+
 
