@@ -7,6 +7,8 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
+from django.core.cache import cache
+
 
 
 @login_required
@@ -118,11 +120,19 @@ def load_ajax_form(request):
 
     return JsonResponse(data)
 
+def get_snf():
+    snj = cache.get('snj')
+    if snj is None:
+        snj = ScheduleNotJob.objects.select_related()
+        cache.set('snj', snj, 300)
+    return snj 
+
+
 @login_required
 def index(request):  
-    snj = ScheduleNotJob.objects.all()
-    form = SNJ()
-    return render(request,"index.html",{'snj': snj, 'form':form})  
+    snj = get_snf()
+    return render(request,"index.html",{'snj': snj})  
+
 
 @login_required
 def save_product_form(request, form, template_name):
@@ -131,7 +141,7 @@ def save_product_form(request, form, template_name):
         if form.is_valid():
             form.save()
             data['form_is_valid'] = True
-            SNJ = ScheduleNotJob.objects.all()
+            snj = get_snf()
             data['html_product_list'] = render_to_string('table.html', {
                 'snj': SNJ
             })
@@ -154,7 +164,7 @@ def addnew(request):
 @login_required
 @permission_required('change_schedulenotjob')
 def edit(request, id):
-    elem = ScheduleNotJob.objects.get(id=id)
+    elem = ScheduleNotJob.objects.prefetch_related().get(pk=id)
     if request.method == "POST":
         form = SNJ(request.POST, instance=elem)
     else:  
@@ -167,13 +177,3 @@ def destroy(request, id):
     snj = ScheduleNotJob.objects.get(id=id)  
     snj.delete()  
     return HttpResponseRedirect(reverse('table:index'))  
-
-
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
-
-
-def is_ajax(request):
-    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
-
-

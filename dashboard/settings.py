@@ -28,7 +28,6 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'widget_tweaks', #pip install django-widget-tweaks
     'smart_selects',
-    'bootstrap_modal_forms',
     #разграничение прав доступа
     'permission.apps.PermissionConfig',
   
@@ -37,6 +36,9 @@ INSTALLED_APPS = [
 
     #Для хероку
     'whitenoise.runserver_nostatic',
+
+    'debug_toolbar',
+
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -53,6 +55,8 @@ MIDDLEWARE = [
     
     #Для хероку
     'whitenoise.middleware.WhiteNoiseMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 #Для хероку
@@ -139,6 +143,9 @@ import os
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 STATICFILES_DIRS = [
     BASE_DIR / "table/static",
 ]
@@ -165,3 +172,9 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
+
+
+#Debug Tool Bar
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

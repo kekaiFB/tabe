@@ -41,13 +41,14 @@ class Post(models.Model):
 
 class Human(models.Model):  
     office = models.ForeignKey(Office, on_delete=models.CASCADE, verbose_name="Служба")  
-    post = ChainedForeignKey(
+    '''post = ChainedForeignKey(
         Post, # the model where you're populating your countries from
         chained_field="office", # the field on your own model that this field links to 
         chained_model_field="office", # the field on Country that corresponds to newcontinent
         show_all=False, # only shows the countries that correspond to the selected continent in newcontinent
         verbose_name="Должность"
-    )  
+    ) '''
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Должность") 
     initials = models.CharField(max_length=150, db_index=True, verbose_name="ФИО")  
 
     class Meta:
@@ -81,13 +82,16 @@ class Shift(models.Model):
 
     def __str__(self):
         return self.title
-    
+     
 
 class ScheduleNotJob(models.Model):
     shift = models.ForeignKey(Shift, on_delete=models.CASCADE, verbose_name="Смена") 
     office = models.ForeignKey(Office, on_delete=models.CASCADE, verbose_name="Служба") 
-    post = GroupedForeignKey(Post, "office") 
-    human = GroupedForeignKey(Human, "post") 
+    #post = GroupedForeignKey(Post, "office") 
+    #human = GroupedForeignKey(Human, "post") 
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Должность") 
+    human = models.ForeignKey(Human, on_delete=models.CASCADE, verbose_name="Сотрудник")  
+    
     reason = models.ForeignKey(Reason, on_delete=models.CASCADE, verbose_name="Причина")
     comment = models.CharField(max_length=300, blank=True, null=True, verbose_name="Примечание")
     length_time = models.IntegerField(blank=True, null=True, verbose_name="Длительность")
@@ -102,8 +106,24 @@ class ScheduleNotJob(models.Model):
         return str(self.human)
 
 
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
+from django.core.cache import cache
+
+
+def clear_snj_cache():
+    cache.delete('snj')
+
+
+@receiver(post_delete, sender=ScheduleNotJob)
+def author_post_delete_handler(sender, **kwargs):
+    clear_snj_cache()
+
+
 @receiver(post_save, sender=ScheduleNotJob)
 def update_date_snj(sender, instance, **kwargs):
+    clear_snj_cache()
+
     if instance.length_time:
         date_end = instance.date_start + timedelta(days=instance.length_time - 1)
         sender.objects.filter(pk=instance.id).update(date_end=date_end.strftime('%Y-%m-%d'))

@@ -1,15 +1,16 @@
 from django import forms  
 from .models import *
-import django.contrib.auth.models 
 from django import forms
 
 
+from smart_selects.db_fields import ChainedForeignKey, GroupedForeignKey  
 
 class SNJ(forms.ModelForm):
     shift = forms.ModelChoiceField(
         queryset=Shift.objects.all(),
         label="Смена"
     ) 
+
     reason = forms.ModelChoiceField(
         queryset=Reason.objects.all(),
         label="Причина"

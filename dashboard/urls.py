@@ -20,10 +20,16 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)    
+
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
+ 
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
  
 from user.views import ErrorHandler
 
 for code in (400, 403, 404, 500):
     vars()['handler{}'.format(code)] = ErrorHandler.as_view(error_code=code)
-
 
