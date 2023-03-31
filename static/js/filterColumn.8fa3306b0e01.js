@@ -1,204 +1,182 @@
 $(document).ready(function () {
+    
+
+//скрывать панель параметров
+//$(".settingDiv").hide();
+$(".settingSVG").click(function(){
+    $(".settingDiv").slideToggle();
+    });
 
 //клонируем header и вставляем после него
 $('#bootstrapdatatable thead tr')
 .clone(true)
 .addClass('filters')
 .appendTo('#bootstrapdatatable thead');
-var savedSelected;
+
 // DataTable
 var table = $('#bootstrapdatatable').DataTable({
     deferRender: true,
     orderCellsTop: true,
     fixedHeader: true,
     
-
-     //--------------------Память фильторв---------------------------
-     stateSave: true,
-     dom: 'Plfrtip',
-     select: true,
-     searchPanes: {
-        // cascadePanes: true,
-        initCollapsed: true,
-     },
-     columnDefs: [
-         {
-             searchPanes: {
-                 show: true,
-             },
-             targets: [1, 2, 3, 4, 5]
-         }
-     ],
-     language: {
-         searchPanes: {
-            collapseMessage: 'Скрыть все',
-            showMessage: 'Показать все',
-            clearMessage: 'Очистить фильтры',
-             title: {
-                 _: 'Выбранные фильтры - %d',
-                 0: 'Нет выбранных фильтров',
-             }
-         }
-     },   
-     
-     stateSaveParams: function (s, data) {
-        //относительые даты
-        data.min = $("#minDate").val();
-        data.max = $("#maxDate").val();
-
-        //относительные кнопки
-        data.buttonDate = $(".relativeDate").find('button.btn-warning').html()
-        
-        //выбор строки
-        data.selected = this.api().rows({selected:true})[0];
-
-
-        //видимость панели настроек
-        data.visibleSetDiv = visVar
-    },
-    stateLoadParams: function (s, data) {
-        $("#minDate").val(data.min);
-        $("#maxDate").val(data.max);
-        
-        if(data.visibleSetDiv){
-            $(".settingDiv").slideToggle()
-            visVar = data.visibleSetDiv
-        }
-
-        $( "button:contains("+ data.buttonDate +")" ).removeClass("btn-success")
-        $( "button:contains("+ data.buttonDate +")" ).addClass("btn-warning")
-    },
-
-   
-    //---------------Конец Память фильторв конец-------------------
-
-   
+    deferRender: true,
 
     columnDefs: [
         {
-            targets: [9],
-            type: 'date'
-        },
-        {
-            targets: 0,
-            visible: false,
-        },
-        {
-            targets: 11,
-            visible: false,
-        },
-        
+          targets: [9],
+          type: 'date'
+        }
     ],
-
+  //  { "visible": false, "targets": 0 }
     //Для Show
     "aLengthMenu": [[3, 7, 10, 25, -1], [3, 7, 10, 25, "All"]],
     "iDisplayLength": 7,
     
+    //--------------------Память фильторв---------------------------
+    stateSave: true,
+    dom: 'Bfrtip',
+    language:{
+        stateRestore: {
+            removeSubmit: 'Удалить',
+            removeConfirm: 'Вы действительно хотите удалить %s?',
+            emptyStates: 'Нет состояний',
+            renameButton: 'Переименовать',
+            renameLabel: '',
+            removeTitle: '',
+            renameTitle: '',
+        },
+        buttons: {
+            createState: 'Создать состояние',
+            savedStates: 'Сохраненные состояния',
+            updateState: 'Обновить',
+            stateRestore: 'Новое состояние %d',
+            removeState: 'Удалить',
+            renameState: 'Переименовать',
+
+        }},
+    buttons: ['createState', 'savedStates'],
+    stateSaveParams: function (s, data) {
+        data.min = $("#minDate").val();
+        data.max = $("#maxDate").val();
+    },
+    stateLoadParams: function (s, data) {
+        $("#minDate").val(data.min);
+        $("#maxDate").val(data.max);
+    },
+
+      
+   //---------------Конец Память фильторв конец-------------------
+
 
    
     initComplete: function () {
-        
         var api = this.api();
         api
-        .columns()
-        .eq(0)
-        .each(function (colIdx) {
-            // перебираем каждый элеемент клонированного 
+                .columns()
+                .eq(0)
+                .each(function (colIdx) {
+                    // перебираем каждый элеемент клонированного 
+                    var cell = $('.filters th').eq(
+                        $(api.column(colIdx).header()).index()
+                    );
+                    var title = $(cell).text();
+                   
+                    if (title == 'Смена' || title == 'Служба' || title == 'Должность' || title == 'Причина'){
+                        $(cell).html('');
+                        $(cell).toggleClass('th');
+                    } else if (title != '' && title != 'Изменить' && title != 'Удалить') {
+                        //добавляем input 
+                        $(cell).html('<input type="text" placeholder="' + title + '" />');
+
+                    } else {
+                        $(cell).html('');
+                        $(cell).toggleClass('th');
+                    }
+ 
+                    // делаем input "живым"
+                    $(
+                        'input',
+                        $('.filters th').eq($(api.column(colIdx).header()).index())
+                    )
+                        .off('keyup change')
+                        .on('change', function (e) {
+                            // Get the search value
+                            $(this).attr('title', $(this).val());
+                            var regexr = '({search})'; //$(this).parents('th').find('select').val();
+ 
+                            var cursorPosition = this.selectionStart;
+                            // Search the column for that value
+                            api
+                                .column(colIdx)
+                                .search(
+                                    this.value != ''
+                                        ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                        : '',
+                                    this.value != '',
+                                    this.value == ''
+                                )
+                                .draw();
+                        })
+                        .on('keyup', function (e) {
+                            e.stopPropagation();
+ 
+                            $(this).trigger('change');
+                            $(this)
+                                .focus()[0]
+                                .setSelectionRange(cursorPosition, cursorPosition);
+                        });
+                });
+       
+
+       //Ставим Option на выбор select
+       this.api()
+       .columns([1,2,3,5])
+       .every(function (colIdx) {
+
+
             var cell = $('.filters th').eq(
                 $(api.column(colIdx).header()).index()
             );
-            var title = $(cell).text();
-            
-            if (title != '' && title != 'Изменить' && title != 'Удалить') {
-                //добавляем input 
-                $(cell).html('<input type="text" placeholder="' + title + '" />');
+           var column = this;
+           var select = $('<select><option value="">Все</option></select>')
+               .appendTo(cell)
+               .on('change', function () {
+                   var val = $.fn.dataTable.util.escapeRegex($(this).val());
 
-            } else {
-                $(cell).html('');
-                $(cell).toggleClass('th');
-            }
+                   column.search(val ? '^' + val + '$' : '', true, false).draw();
+               });
 
-            // делаем input "живым"
-            $(
-                'input',
-                $('.filters th').eq($(api.column(colIdx).header()).index())
-            )
-                .off('keyup change')
-                .on('change', function (e) {
-                    // Get the search value
-                    $(this).attr('title', $(this).val());
-                    var regexr = '({search})'; //$(this).parents('th').find('select').val();
-
-                    var cursorPosition = this.selectionStart;
-                    // Search the column for that value
-                    api
-                        .column(colIdx)
-                        .search(
-                            this.value != ''
-                                ? regexr.replace('{search}', '(((' + this.value + ')))')
-                                : '',
-                            this.value != '',
-                            this.value == ''
-                        )
-                        .draw();
-                })
-                .on('keyup', function (e) {
-                    e.stopPropagation();
-
-                    $(this).trigger('change');
-                    $(this)
-                        .focus()[0]
-                        .setSelectionRange(cursorPosition, cursorPosition);
-                });
-        });
-
-        var state = api.state.loaded();
-        if ( state ) {
-                api.columns().eq( 0 ).each( function ( colIdx ) {
-                var colSearch = state.columns[colIdx].search;
-                var res = ''
-            if ( colSearch.search ) {
-                res = colSearch.search.replace('))))','')
-                res = res.replace('((((','')
-                $('input', $('.filters th')[colIdx-1]).val( res );
-            }
-            savedSelected = state.selected;
-            });
-        }
-      
+           column
+               .data()
+               .unique()
+               .sort()
+               .each(function (d, j) {
+                   select.append('<option value="' + d + '">' + d + '</option>');
+               });     
+       });
+       
     },
 
 });
 
-    var visVar;
-    //скрывать панель параметров
-    $(".settingSVG").click(function(){
-        visVar = !$('.settingDiv').is(":visible")
-        $(".settingDiv").slideToggle();
-        table.draw();
-    });
-
-    table.row(savedSelected).select()
+    
      //Скрыть столбцы
     $('.checkColumn input:checkbox').click(function(){
         var column = table.column($(this).attr('data-column'));
         column.visible(!column.visible());
     });
       
-    
-    var len = 0
+/*
+    //скрываем по умолчанию ID и УДАЛИТЬ
     for ( var i=0 ; i<=$("#bootstrapdatatable tr").length+1 ; i++ ) {
-        table.column(i).visible() === true ? len+=1 : len=len
+        table.column(i).visible() === true ? '' : table.column(i).visible( true )
     }
 
-   for ( var i=0 ; i<=$("#bootstrapdatatable tr").length+1 ; i++ ) {
-        if(table.column(i).visible() === true) {
-            $("input[data-column='" + i +"']").prop('checked', true)
-        } else {
-            $("input[data-column='" + i +"']").prop('checked', false)
-        }
-    }
+    $('.checkColumn input:checkbox').prop('checked', true);
+    $('#hideID').click();
+    $('#hideDeleteRowButton').click();
 
+*/
     //Сбросить фильтры
     $('#resetFilter').on('click', function (e) {
         resetFilters()
@@ -208,6 +186,24 @@ var table = $('#bootstrapdatatable').DataTable({
 
     function resetFilters() {
         table.state.clear();
+        //table.search( '' ).columns().search( '' ).draw();
+        //table.column($(this).data('col-index')).search('', false, false);
+        //table.columns().search("").draw();
+        //$("input").val("");
+        //$(".delete_confirm").val("Удалить");
+        //$('select').prop('selectedIndex',0);
+        //$('span.toggle-vis').removeClass('btn-warning');
+
+        
+        //скрываем по умолчанию ID и УДАЛИТЬ
+      /*  for ( var i=0 ; i<=$("#bootstrapdatatable tr").length+1 ; i++ ) {
+            table.column(i).visible() === true ? '' : table.column(i).visible( true )
+        }
+
+        $('.checkColumn input:checkbox').prop('checked', true);
+        $('#hideID').click();
+        $('#hideDeleteRowButton').click();
+        */
         location.reload()
     }
 
@@ -261,11 +257,9 @@ var table = $('#bootstrapdatatable').DataTable({
 
             $(this).find('td input.delete_confirm').removeClass("btn-outline-danger");
             $(this).find('td input.delete_confirm').addClass("btn-danger");
-
         }
     });
-   
-    
+ 
 
     //Рисуем графики в зависимости от состояния таблиц   
     table.on('draw', function () {
@@ -345,15 +339,10 @@ var table = $('#bootstrapdatatable').DataTable({
         $(".relativeDate button").attr('class', "btn mt-2 btn-secondary");
         $(this).removeClass("btn-warning");
         $(this).addClass("btn-warning");
-
-        table.draw();
     });
 
-    if ($("#minDate").val() == ''){
-        $('button[value="0"][name="year"]').click();
-    }  
+    $('button[value="0"][name="year"]').click();
     
-
     $("body").css("opacity", 1);
 });
 

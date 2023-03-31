@@ -55,14 +55,10 @@ function chartDataOffice(table) {
 
 
 function chartDataDate(table) {
-    var startDate = moment().subtract(0, 'year').startOf('year').format('YYYY-MM-DD');
-    var endDate = moment().subtract(-1, 'year').startOf('year').format('YYYY-MM-DD');
     var date = [];
-
-    for (var m = moment(startDate); m.isBefore(endDate+1); m.add(1, 'days')) {
+    for (var m = moment(DateMin(table)); m.isBefore(DateMax(table)+1); m.add(1, 'days')) {
         date.push(m.format('YYYY-MM-DD'));
     }
-
     var counts = {};
     var countsReason = {};
     for (var i = 0; i<date.length; i++) {
@@ -90,9 +86,39 @@ function chartDataDate(table) {
 }
 
 
+function DateMin(table) {
+    dateArray = new Array();
+    table.rows({ search: 'applied' }).data().each(function (val) {
+        currDate =  new Date(val[8]);
+        dateArray.push(currDate.getTime());
+        currDate =  new Date(val[9]);
+        dateArray.push(currDate.getTime());
+    });
+    dateArray.sort();
+    var fromDate = new Date(dateArray[0]);
+    return fromDate
+
+}
+
+function DateMax(table) {
+    dateArray = new Array();
+    table.rows({ search: 'applied' }).data().each(function (val) {
+        currDate =  new Date(val[8]);
+        dateArray.push(currDate.getTime());
+        currDate =  new Date(val[9]);
+        dateArray.push(currDate.getTime());
+    });
+    dateArray.sort();
+    var toDate = new Date(dateArray[dateArray.length-1]);
+    return toDate
+
+}
+
+
 function month(table, reason) {
-    var startDate = moment().subtract(0, 'year').startOf('year').format('YYYY-MM-DD');
-    var endDate = moment().subtract(0, 'year').endOf('year').format('YYYY-MM-DD')
+    var startDate = moment(DateMin(table)).format('YYYY-MM-DD');
+    var endDate = moment(DateMax(table)).format('YYYY-MM-DD');
+
 
     var date = [];
 
