@@ -154,6 +154,7 @@ MEDIA_URL = '/media/'
 STATICFILES_DIRS = [
     BASE_DIR / "table/static",
     BASE_DIR / "table_tgo/static",
+    BASE_DIR / "user/static",
 ]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
