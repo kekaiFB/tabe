@@ -92,18 +92,3 @@ class RessourceOperation(models.Model):
 
     def __str__(self):
         return str(self.tgo_object.tgo.title) + ' ' + self.ressource.title
-    
-
-
-def clear_cache(model):
-    cache.delete(model)
-
-
-@receiver(post_delete, sender=TGO)
-def delete_TGO(sender, **kwargs):
-    clear_cache('tgo')
-
-
-@receiver(post_save, sender=TGO)
-def update_date_snj(sender, instance, **kwargs):
-    clear_cache('tgo')

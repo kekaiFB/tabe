@@ -3,7 +3,6 @@ from django.views.generic import ListView
 from .models import (TGO_object
                      , RessourceOperation
                      , TGO
-                     , delete_TGO
                      )
 from django.db.models import Prefetch
 from .utils import *
@@ -19,7 +18,6 @@ from bootstrap_modal_forms.generic import (
   , BSModalDeleteView
   , BSModalUpdateView
 )
-from .cache_query import *
 from django.shortcuts import redirect 
 
 
@@ -34,7 +32,7 @@ class TGOIndex(DataMixin, ListView):
         return context
     
     def get_queryset(self):
-        return get_tgo()
+        return TGO.objects.all()
     
 
 class ShowTGO(DataMixin, ListView):
@@ -182,11 +180,6 @@ def update_tgo(request):
 #Копируем ТГО
 @login_required
 def copy_tgo(request, pk):
-    #очищаем кэш   
-    delete_TGO(TGO) 
-
-
-    
     instance = TGO.objects.get(pk = pk)
     old_tgo_objects = TGO_object.objects.filter(tgo = instance.pk)
     
