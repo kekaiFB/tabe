@@ -182,6 +182,11 @@ def update_tgo(request):
 #Копируем ТГО
 @login_required
 def copy_tgo(request, pk):
+    #очищаем кэш   
+    delete_TGO(TGO) 
+
+
+    
     instance = TGO.objects.get(pk = pk)
     old_tgo_objects = TGO_object.objects.filter(tgo = instance.pk)
     
@@ -197,8 +202,7 @@ def copy_tgo(request, pk):
         tgo_obj.time_end = '0'
         tgo_obj.save()
 
-    #очищаем кэш   
-    delete_TGO() 
+    
     return redirect('table_tgo:index')
 
 
