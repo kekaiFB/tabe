@@ -3,15 +3,8 @@ from datetime import timedelta
 
 #Для post_save
 from django.dispatch import receiver
-from django.db.models.signals import post_save
-
-from django.db import models
-from datetime import timedelta
-
-#Для post_save
-from django.dispatch import receiver
-from django.db.models.signals import post_save
-
+from django.db.models.signals import post_delete, post_save
+from django.core.cache import cache 
 
 from smart_selects.db_fields import ChainedForeignKey, GroupedForeignKey  
 
@@ -105,10 +98,6 @@ class ScheduleNotJob(models.Model):
     def __str__(self):
         return str(self.human)
 
-
-from django.db.models.signals import post_delete, post_save
-from django.dispatch import receiver
-from django.core.cache import cache
 
 
 def clear_snj_cache():

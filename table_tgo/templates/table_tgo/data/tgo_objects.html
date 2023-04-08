@@ -1,0 +1,25 @@
+
+{% extends "table_tgo/base.html" %}
+{% load tgo_tags %}
+    
+{% block content %}
+        <div class="container">
+            <div class="row">               
+                <span class="h3 d-flex justify-content-left"> 
+                    {{ title_TGO }}
+                    
+                    {% include 'table_tgo/data/instructions.html' %} 
+                </span>               
+            </div>
+            <div class="row">
+                <input type="hidden" class="add_tgo_object" data-form-url="{% url  'table_tgo:create_tgo_object' tgo_id %}" />
+                <input type="hidden" id="urlIndex" data-url="{% url 'table_tgo:index' %}" />
+            </div>
+            <div class="row">
+                {% include 'table_tgo/data/tgo_ojects_table.html' %}
+            </div>
+        </div>
+        
+{% endblock %}
+
+

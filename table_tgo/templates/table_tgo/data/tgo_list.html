@@ -1,0 +1,41 @@
+{% load tgo_tags %}
+{% include 'table_tgo/navbar.html' %}
+
+<h3 class="m-1">
+    Технологические графики обслуживания
+</h3>
+
+<table id="tgoList" class="row-border" style="width:100%">
+    <thead>
+        <tr>
+            <th>ТГО {% button_add 'create_tgo' 'table_tgo:create_tgo' %}</th>
+            <th>Дата создания</th>
+            <th>Дата обновления</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in tgo %}  
+            <tr>
+                <td>{{t.title}}</td>
+                <td>{{t.time_create|date:"d-m-Y"}}</td>
+                <td>{{t.time_update|date:"d-m-Y"}}</td>
+                <td>
+                    <a href="{{ t.get_absolute_url }}" class="copyTGO btn btn-outline-primary">Подробнее</a>
+                    <a href="#"  class="edit btn btn-outline-warning" data-form-url="{% url 'table_tgo:edit' t.id %}">Редактировать</a>
+                    <a href="{% url 'table_tgo:copy_tgo' t.id %}" 
+                    class="copyTGO btn btn-primary"
+                    data-toggle="confirmation"
+                    data-btn-ok-label="Да" 
+                    data-btn-cancel-label="Нет" 
+                    data-title="Создать копию?"
+                   >
+                    Создать копию</a>        
+               
+                </td>
+            </tr>     
+        {% endfor %}
+    </tbody>
+</table>
+

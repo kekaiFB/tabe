@@ -1,0 +1,52 @@
+
+{% load tgo_tags %}
+<table id="current_tgo">
+    <tbody style="display:none">
+        {% for t in tgo_objects %}  
+            <tr>
+                <td>{{t.id}}</td>
+                <td>table_tgo_tgo_object</td>
+
+                <td>{{t.order}}</td>
+                <td>{{t.operation}}{% del_button 'delete_tgo_object' 'table_tgo:delete_tgo_object' t.id %}{% edit_button 'edit_tgo_object' 'table_tgo:edit_tgo_object' t.id %}</td>
+                <td>{% button_add_resource 'add_tgo_object_resource' 'table_tgo:create_tgo_object_resource' t.id tgo_id %}</td>
+                <td></td>
+                <td>{{t.time_start}}</td>
+                <td>{{t.time_lenght}}</td>
+                <td>{{t.time_end}}</td>
+
+                <td>{% unique_list t.ressource.all %}</td>
+            </tr>
+            {% for r in t.ressource.all %}
+                <tr>
+                    <td>{{r.id}}</td>
+                    <td>table_tgo_ressourceoperation</td>
+
+                    <td>{{t.order}}.{{forloop.counter}}</td>
+                    <td></td>
+                    <td>{{ r.ressource }}{% del_button 'delete_tgo_object' 'table_tgo:delete_resource' r.id %}{% edit_button 'edit_resource' 'table_tgo:edit_resource' r.id %}</td>
+                    <td>{{ r.count }}</td>
+                    <td>{{r.time_start}}</td>
+                    <td>{{r.time_lenght}}</td>
+                    <td>{{r.time_end}}</td>
+                    <td>{{ r.ressource.office.title }}</td>
+                </tr>
+            {% endfor %}   
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<div id="spreadsheet" style='width:100%;max-width:600px;height:100px;'></div>
+

@@ -14,7 +14,6 @@ DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
-# 3 приложени добавил
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -23,11 +22,16 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    #приложения
     'table',
+    'table_tgo',
+
+
     'crispy_forms',
     'crispy_bootstrap5',
-    'widget_tweaks', #pip install django-widget-tweaks
+    'widget_tweaks', 
     'smart_selects',
+
     #разграничение прав доступа
     'permission.apps.PermissionConfig',
   
@@ -37,6 +41,7 @@ INSTALLED_APPS = [
     #Для хероку
     'whitenoise.runserver_nostatic',
 
+    #опитимизация
     'debug_toolbar',
 
 ]
@@ -148,6 +153,7 @@ MEDIA_URL = '/media/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "table/static",
+    BASE_DIR / "table_tgo/static",
 ]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -172,7 +178,7 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
-
+ 
 
 #Debug Tool Bar
 INTERNAL_IPS = [

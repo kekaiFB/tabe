@@ -16,7 +16,6 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ('id', 'office', 'title',)
     list_display_links = ('id', 'title',)
     search_fields = ('id', 'office__title', 'title',)
-    
 
 class HumanAdmin(admin.ModelAdmin):
     list_display = ('id', 'office', 'post', 'initials',)
