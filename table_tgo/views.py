@@ -3,6 +3,7 @@ from django.views.generic import ListView
 from .models import (TGO_object
                      , RessourceOperation
                      , TGO
+                     , delete_TGO
                      )
 from django.db.models import Prefetch
 from .utils import *
@@ -196,8 +197,8 @@ def copy_tgo(request, pk):
         tgo_obj.time_end = '0'
         tgo_obj.save()
 
-       
-
+    #очищаем кэш   
+    delete_TGO() 
     return redirect('table_tgo:index')
 
 
