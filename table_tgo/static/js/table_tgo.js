@@ -6,7 +6,7 @@ $('#tgoList').DataTable({
 });
 
 
-    
+//Берем нашу HTML таблицу и конвертируем в 2d массив    
 var myTableArray = [];
 $("table#current_tgo tr").each(function() {
     var rowDataArray = [];
@@ -19,7 +19,7 @@ $("table#current_tgo tr").each(function() {
     }
     });
 
-
+var rowOp = []
 var options = {
     
     data: myTableArray,
@@ -33,8 +33,8 @@ var options = {
         { type:'text', width: 100, readOnly:true,},
         { type:'text', width: 80, mask:'0:00'},
         { type:'text', width: 100, mask:'0:00'},
-        { type:'text', width: 80, mask:'0:00'},
-        { type:'text', width: 150, readOnly:true,},
+        { type:'text', width: 140, mask:'0:00'},
+        { type:'text', width: 150, readOnly:true },
     ],
 
     nestedHeaders:[
@@ -60,11 +60,11 @@ var options = {
                 colspan: '1',
             },
             {
-                title: 'Длительность',
+                title: 'Окончание',
                 colspan: '1',
             },
             {
-                title: 'Конец',
+                title: 'Продолжительность',
                 colspan: '1',
             },
             {
@@ -119,23 +119,45 @@ var options = {
         },
     ],
 
-
+    
     updateTable:function(instance, cell, col, row, val, label, cellName) {
-        // Number formating
+        cell.style.color = 'black'
+
+        //выделяем операции особым цветом
         if (col == 3) {
-            // Get text
             if( cell.innerText != '' && cell.innerText != 'Окончание')
             {
+                rowOp.push(row)
                 cell.style.backgroundColor = '#edf3ff';
             }
         }
 
+        //выделяем подразделения для операций особым цветом
+        if (rowOp.indexOf(row) != -1) {
+            if (col == 9) {
+                cell.style.backgroundColor = '#edf3ff';
+            }
+           
+
+        }
+
+
+        //выделяем окончание особым цветом
         if (label == 'Окончание') {
             cell.style.backgroundColor = '#f46e42';
             cell.style.color = '#ffffff';
         }
     
+        //выделяем колонки со временем особым цветом
+        if(col == 6 || col == 7 || col == 8){
+            cell.style.backgroundColor = '#FFFFE0'
 
+            //если время является формулой
+            if (val[0] == '=')
+             {
+                 cell.style.backgroundColor = '#f8f8ff'
+             }  
+        }
         
     },
     
@@ -147,11 +169,12 @@ var options = {
 
 var myTable = jspreadsheet(document.getElementById('spreadsheet'), options);
 
+//скрываем по умолчанию столбцы с TableName и ID
 myTable.hideColumn(1);
 myTable.hideColumn(0);
 var lenTable = myTable.getColumnData([0]).length
 
-
+//Сохраняем время в БД
 function saveTime() {
     var tgo_ogject_update = []; 
     var update_tgoObj_arr = [];
@@ -192,17 +215,18 @@ function saveTime() {
       });
 }
 
-
+//кнопка Назад
 function goUrlIndex() {
     var url = $("#urlIndex").attr("data-url");
     document.location.href = url
 }
 
+//Связть с Ajax в проекте
 function addOperation() {
     $(".add_tgo_object").click();
 }
 
-
+//Инструкции
 $('.instructionsButton').on('click', function (e) {
     $(".instructions").hide();
 });

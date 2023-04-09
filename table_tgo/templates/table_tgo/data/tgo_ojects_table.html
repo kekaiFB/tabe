@@ -12,8 +12,8 @@
                 <td>{% button_add_resource 'add_tgo_object_resource' 'table_tgo:create_tgo_object_resource' t.id tgo_id %}</td>
                 <td></td>
                 <td>{{t.time_start}}</td>
-                <td>{{t.time_lenght}}</td>
                 <td>{{t.time_end}}</td>
+                <td>{{t.time_lenght}}</td>
 
                 <td>{% unique_list t.ressource.all %}</td>
             </tr>
@@ -27,8 +27,8 @@
                     <td>{{ r.ressource }}{% del_button 'delete_tgo_object' 'table_tgo:delete_resource' r.id %}{% edit_button 'edit_resource' 'table_tgo:edit_resource' r.id %}</td>
                     <td>{{ r.count }}</td>
                     <td>{{r.time_start}}</td>
-                    <td>{{r.time_lenght}}</td>
                     <td>{{r.time_end}}</td>
+                    <td>{{r.time_lenght}}</td>
                     <td>{{ r.ressource.office.title }}</td>
                 </tr>
             {% endfor %}   

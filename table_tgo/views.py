@@ -167,11 +167,11 @@ def update_tgo(request):
     
     with transaction.atomic():
         for elem in update_tgoObj_arr:
-            TGO_object.objects.filter(id=elem[0]).update(time_start=elem[1], time_lenght=elem[2], time_end=elem[3])
+            TGO_object.objects.filter(id=elem[0]).update(time_start=elem[1], time_end=elem[2], time_lenght=elem[3])
 
     with transaction.atomic():
         for elem in update_res_arr:
-            RessourceOperation.objects.filter(id=elem[0]).update(time_start=elem[1], time_lenght=elem[2], time_end=elem[3])
+            RessourceOperation.objects.filter(id=elem[0]).update(time_start=elem[1], time_end=elem[2], time_lenght=elem[3])
             
     return JsonResponse(data)
 #-----------------Обновление БД через Ajax конец----------------------    

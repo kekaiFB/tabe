@@ -15,6 +15,7 @@ class Operation(models.Model):
     class Meta:
         verbose_name = 'Операция'
         verbose_name_plural = '1 Операция'
+        ordering = ['title']
 
     def __str__(self):
         return self.title
@@ -27,6 +28,7 @@ class Ressource(models.Model):
     class Meta:
         verbose_name = 'Ресурс'
         verbose_name_plural = '2 Ресурс'
+        ordering = ['title']
 
     def __str__(self):
         return self.title
