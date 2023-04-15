@@ -1,4 +1,4 @@
-from bootstrap_modal_forms.forms import BSModalModelForm
+'''from bootstrap_modal_forms.forms import BSModalModelForm
 from .models import TGO, TGO_object, RessourceOperation
 from django import forms
 
@@ -34,3 +34,4 @@ class RessourceOperationModelForm(BSModalModelForm, UnstyledForm):
                    'time_end': forms.HiddenInput(),
                    }
         exclude = ['timestamp']
+'''

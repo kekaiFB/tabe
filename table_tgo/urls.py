@@ -2,7 +2,7 @@ from django.urls import path
 from .views import *
 
 app_name = 'table_tgo'
-
+'''
 urlpatterns = [
     path('', TGOIndex.as_view(), name='index'),
     path("tgo/<str:title>/<int:id>/", ShowTGO.as_view(), name='tgo_objects'),
@@ -26,3 +26,4 @@ urlpatterns = [
 urlpatterns += [
     path('ajax_update_tgo', update_tgo, name='ajax_update_tgo'), 
 ]
+'''
