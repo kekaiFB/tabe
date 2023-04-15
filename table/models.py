@@ -6,8 +6,11 @@ from django.dispatch import receiver
 from django.db.models.signals import post_delete, post_save
 from django.core.cache import cache 
 
+from smart_selects.db_fields import ChainedForeignKey, GroupedForeignKey  
+
+
 class Office(models.Model):  
-    title = models.CharField(max_length=150, db_index='True', verbose_name="Служба")  
+    title = models.CharField(max_length=150, db_index=True, verbose_name="Служба")  
 
     class Meta:
         verbose_name = 'Служба'
@@ -19,7 +22,7 @@ class Office(models.Model):
 
 class Post(models.Model):
     office = models.ForeignKey(Office, on_delete=models.CASCADE, verbose_name="Служба")  
-    title = models.CharField(max_length=150, db_index='True', verbose_name="Должность")
+    title = models.CharField(max_length=150, db_index=True, verbose_name="Должность")
 
     class Meta:
         verbose_name = 'Должность'
@@ -30,9 +33,9 @@ class Post(models.Model):
 
 
 class Human(models.Model):  
-    office = models.ForeignKey(Office, on_delete=models.CASCADE, verbose_name="Служба")
+    office = models.ForeignKey(Office, on_delete=models.CASCADE, verbose_name="Служба")  
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Должность") 
-    initials = models.CharField(max_length=150, db_index='True', verbose_name="ФИО")  
+    initials = models.CharField(max_length=150, db_index=True, verbose_name="ФИО")  
 
     class Meta:
         verbose_name = 'Человек'
@@ -74,10 +77,10 @@ class ScheduleNotJob(models.Model):
     human = models.ForeignKey(Human, on_delete=models.CASCADE, verbose_name="Сотрудник")  
     
     reason = models.ForeignKey(Reason, on_delete=models.CASCADE, verbose_name="Причина")
-    comment = models.CharField(max_length=300, blank='True', null='True', verbose_name="Примечание")
-    length_time = models.IntegerField(blank='True', null='True', verbose_name="Длительность")
-    date_start = models.DateField(blank='True', null='True', verbose_name="Начало") 
-    date_end = models.DateField(blank='True', null='True', verbose_name="Окончание") 
+    comment = models.CharField(max_length=300, blank=True, null=True, verbose_name="Примечание")
+    length_time = models.IntegerField(blank=True, null=True, verbose_name="Длительность")
+    date_start = models.DateField(blank=True, null=True, verbose_name="Начало") 
+    date_end = models.DateField(blank=True, null=True, verbose_name="Окончание") 
     
     class Meta:
         verbose_name = 'Данные пропуска'
@@ -88,7 +91,7 @@ class ScheduleNotJob(models.Model):
 
 
 
-def clear_snj_cache():
+'''def clear_snj_cache():
     cache.delete('snj')
 
 
@@ -109,6 +112,6 @@ def update_date_snj(sender, instance, **kwargs):
          sender.objects.filter(pk=instance.id).update(date_end=None)
 
     #очищаем кэщ
-    clear_snj_cache()
+    clear_snj_cache()'''
 
 
