@@ -1,4 +1,4 @@
-from django import forms  
+'''from django import forms  
 from .models import *
 from django import forms
 
@@ -38,3 +38,4 @@ class SNJ(forms.ModelForm):
 
 #pip install django-crispy-forms
 #pip install crispy-bootstrap5 
+'''

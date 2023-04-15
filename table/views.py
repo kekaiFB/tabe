@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+'''from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render  
 from .forms import SNJ  
@@ -177,3 +177,4 @@ def destroy(request, id):
     snj = ScheduleNotJob.objects.get(id=id)  
     snj.delete()  
     return HttpResponseRedirect(reverse('table:index'))  
+'''
