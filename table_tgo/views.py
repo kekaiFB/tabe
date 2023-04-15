@@ -1,4 +1,4 @@
-'''
+
 from django.views.generic import ListView
 from .models import (TGO_object
                      , RessourceOperation
@@ -327,4 +327,3 @@ def copy_tgo_all(request, pk):
 
     return redirect('table_tgo:index')
 
-'''
