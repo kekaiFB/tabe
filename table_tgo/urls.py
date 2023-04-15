@@ -15,10 +15,12 @@ urlpatterns = [
     path('edit_tgo_object/<int:pk>', TGO_objectUpdateView.as_view(), name='edit_tgo_object'),
     path('edit_resource/<int:pk>', ResourceUpdateView.as_view(), name='edit_resource'),
 
+    path('delete/tgo/<int:pk>/', TGODeleteView.as_view(), name='delete_tgo'),
     path('delete/tgo_object/<int:pk>/', TGO_objectDeleteView.as_view(), name='delete_tgo_object'),
     path('delete/resource/<int:pk>/', ResourceDeleteView.as_view(), name='delete_resource'),    
 
     path('copy_tgo/<int:pk>', copy_tgo, name='copy_tgo'),
+    path('copy_tgo_all/<int:pk>', copy_tgo_all, name='copy_tgo_all'),
 ]
 
 urlpatterns += [

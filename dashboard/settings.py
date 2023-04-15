@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'widget_tweaks', 
     'smart_selects',
+    'django_filters',
 
     #разграничение прав доступа
     'permission.apps.PermissionConfig',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     #опитимизация
     'debug_toolbar',
 
+    
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

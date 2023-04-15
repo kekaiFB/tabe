@@ -1,16 +1,27 @@
 {% load tgo_tags %}
 {% include 'table_tgo/navbar.html' %}
 
-<h3 class="m-1">
-    Технологические графики обслуживания
-</h3>
 
-<table id="tgoList" class="row-border" style="width:100%">
+<span id="formFilter">
+<form action="" method="get"  class="form-inline justify-content-left">
+    <select name="select" class="ml-2 mb-1 form-select form-select-sm">
+        {% if filter == 'all' %}
+            <option value="request">Мои</option>
+            <option value="all" selected>Все</option>
+        {% else %}
+            <option value="request" selected>Мои</option>
+            <option value="all">Все</option>
+        {% endif %}
+      </select>
+      <button type="submit" class="ml-1 mb-1 btn btn-primary btn-sm">Фильтр</button>
+</form>
+</span>
+<table id="tgoList" class="table table-striped" style="width:100%">
     <thead>
         <tr>
-            <th>ТГО {% button_add 'create_tgo' 'table_tgo:create_tgo' %}</th>
+            <th>ТГО {% button_add 'table_tgo:create_tgo' %}</th>
             <th>Дата создания</th>
-            <th>Дата обновления</th>
+            <th></th>
             <th></th>
             <th></th>
         </tr>
@@ -18,24 +29,25 @@
     <tbody>
         {% for t in tgo %}  
             <tr>
-                <td>{{t.title}}</td>
-                <td>{{t.time_create|date:"d-m-Y"}}</td>
-                <td>{{t.time_update|date:"d-m-Y"}}</td>
                 <td>
-                    <a href="{{ t.get_absolute_url }}" class="copyTGO btn btn-outline-primary">Подробнее</a>
-                    <a href="#"  class="edit btn btn-outline-warning" data-form-url="{% url 'table_tgo:edit' t.id %}">Редактировать</a>
-                    <a href="{% url 'table_tgo:copy_tgo' t.id %}" 
-                    class="copyTGO btn btn-primary"
-                    data-toggle="confirmation"
-                    data-btn-ok-label="Да" 
-                    data-btn-cancel-label="Нет" 
-                    data-title="Создать копию?"
-                   >
-                    Создать копию</a>        
-               
+                    {{t.title}} 
+                    {% if request.user == t.author %}
+                        {% del_button 'table_tgo:delete_tgo' t.id %}
+                        {% edit_button 'table_tgo:edit' t.id %}
+                    {% endif %}
+                    
+                </td>
+                <td>{{t.time_create|date:"d-m-Y"}}</td>
+                <td>
+                    <a href="{{ t.get_absolute_url }}" class="btn btn-outline-primary">Подробнее...</a>
+                </td>
+                <td>
+                    {% copy_button 'table_tgo:copy_tgo' t.id "Копия" "Создать копию операций ТГО?" %}
+                </td>
+                <td>
+                    {% copy_button 'table_tgo:copy_tgo_all' t.id "Полная копия" "Создать полную копию ТГО?" %} 
                 </td>
             </tr>     
         {% endfor %}
     </tbody>
 </table>
-

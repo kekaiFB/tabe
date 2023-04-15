@@ -1,8 +1,7 @@
-/*
 body{
   opacity: 0;
 }
-*/
+
 .settingDiv{
   display: none
 }
@@ -57,12 +56,6 @@ svg {
   margin-top: 2.2%;
 }
 
-.dataTables_filter {
-  float: left !important;
-  margin-left: 2%;
-  margin-top: -0.1%;
-  }
-
 .done{
     color: white;
 }
@@ -86,4 +79,9 @@ svg {
 
 li {
   text-decoration: none;
+}
+
+.dataTables_filter {
+  float: left !important;
+  margin-left: 10px;
 }

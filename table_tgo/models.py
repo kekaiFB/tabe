@@ -3,10 +3,7 @@ from django.urls import reverse
 from smart_selects.db_fields import ChainedForeignKey
 from table.models import Office
 
-#Для post_save
-from django.dispatch import receiver
-from django.db.models.signals import post_delete, post_save
-from django.core.cache import cache 
+from django.contrib.auth.models import User
 
 
 class Operation(models.Model):  
@@ -35,6 +32,7 @@ class Ressource(models.Model):
 
 
 class TGO(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=150, db_index=True, verbose_name="ТГО")  
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     time_update = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
@@ -53,6 +51,7 @@ class TGO(models.Model):
     
 
 class TGO_object(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     tgo = models.ForeignKey(TGO, on_delete=models.CASCADE, verbose_name="ТГО")  
     operation = models.ForeignKey(Operation, on_delete=models.CASCADE, verbose_name="Операция")  
     ressource = models.ManyToManyField(Ressource, through='RessourceOperation') 

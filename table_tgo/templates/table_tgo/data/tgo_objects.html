@@ -6,20 +6,16 @@
         <div class="container">
             <div class="row">               
                 <span class="h3 d-flex justify-content-left"> 
-                    {{ title_TGO }}
-                    
-                    {% include 'table_tgo/data/instructions.html' %} 
+                    <span id="title" class="h3">{{ title_TGO }}</span>
+                    {% include 'table_tgo/data/tgo/instructions.html' %} 
                 </span>               
             </div>
             <div class="row">
-                <input type="hidden" class="add_tgo_object" data-form-url="{% url  'table_tgo:create_tgo_object' tgo_id %}" />
-                <input type="hidden" id="urlIndex" data-url="{% url 'table_tgo:index' %}" />
-            </div>
-            <div class="row">
-                {% include 'table_tgo/data/tgo_ojects_table.html' %}
+                {% include 'table_tgo/data/tgo/graphic.html' %}
+                {% include 'table_tgo/data/tgo/tgo_ojects_table.html' %}
             </div>
         </div>
         
+        <input type="hidden" class="add_tgo_object modalButton" data-form-url="{% url  'table_tgo:create_tgo_object' tgo_id %}" />
 {% endblock %}
-
 
