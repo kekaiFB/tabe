@@ -34,8 +34,14 @@ class Post(models.Model):
 
 class Human(models.Model):  
     office = models.ForeignKey(Office, on_delete=models.CASCADE, verbose_name="Служба")  
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Должность") 
-    initials = models.CharField(max_length=150, db_index=True, verbose_name="ФИО")  
+    post = ChainedForeignKey(
+            Post, # the model where you're populating your countries from
+            chained_field="office", # the field on your own model that this field links to 
+            chained_model_field="office", # the field on Country that corresponds to newcontinent
+            show_all=False, # only shows the countries that correspond to the selected continent in newcontinent
+            verbose_name="Должность"
+        )
+    #post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Должность")     initials = models.CharField(max_length=150, db_index=True, verbose_name="ФИО")  
 
     class Meta:
         verbose_name = 'Человек'
@@ -73,8 +79,10 @@ class Shift(models.Model):
 class ScheduleNotJob(models.Model):
     shift = models.ForeignKey(Shift, on_delete=models.CASCADE, verbose_name="Смена") 
     office = models.ForeignKey(Office, on_delete=models.CASCADE, verbose_name="Служба") 
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Должность") 
-    human = models.ForeignKey(Human, on_delete=models.CASCADE, verbose_name="Сотрудник")  
+    post = GroupedForeignKey(Post, "office") 
+    human = GroupedForeignKey(Human, "post") 
+    # post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Должность") 
+    # human = models.ForeignKey(Human, on_delete=models.CASCADE, verbose_name="Сотрудник")  
     
     reason = models.ForeignKey(Reason, on_delete=models.CASCADE, verbose_name="Причина")
     comment = models.CharField(max_length=300, blank=True, null=True, verbose_name="Примечание")
