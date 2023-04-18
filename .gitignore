@@ -1,5 +1,10 @@
 db.sqlite3
 migrations/
-*.pyc
+
+**/__pycache__/**
+*pyc
+*env
+**/.vscode/**
+
 commands.txt
 data_dump.json
