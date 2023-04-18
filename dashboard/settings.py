@@ -158,7 +158,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "table/static",
     BASE_DIR / "table_tgo/static",
     BASE_DIR / "user/static",
-    BASE_DIR / "timetable/static",
+    # BASE_DIR / "timetable/static",
 ]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
