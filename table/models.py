@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_delete, post_save
 from django.core.cache import cache 
 
+from smart_selects.db_fields import ChainedForeignKey
 
 class Office(models.Model):  
     title = models.CharField(max_length=150, db_index=True, verbose_name="Служба")  
@@ -32,7 +33,14 @@ class Post(models.Model):
 
 class Human(models.Model):  
     office = models.ForeignKey(Office, on_delete=models.CASCADE, verbose_name="Служба")  
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Должность") 
+    #post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Должность")
+    post = ChainedForeignKey(
+        Post, # the model where you're populating your countries from
+        chained_field="office", # the field on your own model that this field links to 
+        chained_model_field="office", # the field on Country that corresponds to newcontinent
+        show_all=False, # only shows the countries that correspond to the selected continent in newcontinent
+        verbose_name="Должность"
+    )
     initials = models.CharField(max_length=150, db_index=True, verbose_name="ФИО")  
 
     class Meta:

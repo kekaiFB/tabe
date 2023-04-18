@@ -57,8 +57,8 @@
 <input type="hidden" value={{ request.user }} class="requestUser"/>
 <form method='post' action="{% url 'table_tgo:index' %}">
     {% csrf_token %}
-    <input name="author" value={{ tgo_objects.first.author }}> 
-    <button id="urlIndex" type="submit"></button>
+    <input type="hidden" name="author_tgo" value={{ author }}>
+    <input type="hidden" name="author" value={{ tgo_objects.first.author }}>  
+    <button type="hidden" id="urlIndex" type="submit"></button>
  </form>
-
 

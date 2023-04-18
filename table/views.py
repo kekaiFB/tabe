@@ -112,11 +112,11 @@ def load_ajax_form(request):
                     humans = Human.objects.all()
 
     if offices:     
-        data['html_office'] = render_to_string('ajax/office.html', { 'offices': offices})
+        data['html_office'] = render_to_string('table/ajax/office.html', { 'offices': offices})
     if humans:     
-        data['html_human'] = render_to_string('ajax/human.html', { 'humans': humans})
+        data['html_human'] = render_to_string('table/ajax/human.html', { 'humans': humans})
     if posts:     
-        data['html_post'] = render_to_string('ajax/post.html', { 'posts': posts})
+        data['html_post'] = render_to_string('table/ajax/post.html', { 'posts': posts})
 
     return JsonResponse(data)
 
@@ -131,7 +131,7 @@ def get_snf():
 @login_required
 def index(request):  
     snj = get_snf()
-    return render(request,"index.html",{'snj': snj})  
+    return render(request, "table/index.html", {'snj': snj})  
 
 
 @login_required
@@ -142,7 +142,7 @@ def save_product_form(request, form, template_name):
             form.save()
             data['form_is_valid'] = True
             snj = get_snf()
-            data['html_product_list'] = render_to_string('table.html', {
+            data['html_product_list'] = render_to_string('table/table.html', {
                 'snj': snj
             })
         else:
@@ -158,7 +158,7 @@ def addnew(request):
         form = SNJ(request.POST)
     else:
         form = SNJ()
-    return save_product_form(request, form, 'addnew.html')  
+    return save_product_form(request, form, 'table/addnew.html')  
 
 
 @login_required
@@ -169,7 +169,7 @@ def edit(request, id):
         form = SNJ(request.POST, instance=elem)
     else:  
         form = SNJ(instance=elem)
-    return save_product_form(request, form, 'edit.html')
+    return save_product_form(request, form, 'table/edit.html')
 
 
 @login_required

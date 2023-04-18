@@ -314,8 +314,12 @@ $(document).ready(function () {
     }
     
     function addOperation() {
-        if ($(".requestUser").val() == $( "input[name='author']" ).val())
+        if ($(".requestUser").val() == $( "input[name='author']" ).val()
+        || $(".requestUser").val() == $( "input[name='author_tgo']" ).val())
+        {
             $(".add_tgo_object").click();
+        }
+            
     }
 
 

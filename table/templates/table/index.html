@@ -1,13 +1,12 @@
-{% extends "base.html" %}
+{% extends "table/base.html" %}
   
 {% block content %}
-    {% include 'navbar.html' %}
-
-    {% include 'parameters.html' %}
-    {% include 'table.html' %}
-    {% include 'graphic.html' %}
+    {% include 'table/navbar.html' %}
+    {% include 'table/parameters.html' %}
+    {% include 'table/table.html' %}
+    {% include 'table/graphic.html' %}
     {% endblock content %}{% block javascript %}
-    {% include 'dataGraphic.html' %}
+    {% include 'table/dataGraphic.html' %}
     
     <div class="modal fade" tabindex="-1" id="modal-product" aria-labelledby=".modalLabel" aria-hidden="true">
         <div class="modal-dialog">

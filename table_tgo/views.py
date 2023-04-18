@@ -78,6 +78,12 @@ class ShowTGO(DataMixin, ListView):
         context = dict(list(context.items()) + list(c_def.items()))
         context['title_TGO'] = self.kwargs['title']
         context['tgo_id'] = self.kwargs['id']
+
+        author = None if not self.request.POST.get('author') else str(self.request.POST.get('author'))
+        if author:
+            context['author'] = author
+          
+
         return context
     
     def get_queryset(self):
@@ -87,6 +93,10 @@ class ShowTGO(DataMixin, ListView):
             queryset=RessourceOperation.objects.select_related(),
             ),
         )
+    
+    
+    def post(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
     
 
 #-----------------Добавление----------------------

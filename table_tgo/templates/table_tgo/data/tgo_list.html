@@ -1,6 +1,5 @@
 {% load tgo_tags %}
-{% include 'table_tgo/navbar.html' %}
-
+{% include 'table/navbar.html' %}
 
 <span id="formFilter">
 <form action="" method="get"  class="form-inline justify-content-left">
@@ -39,7 +38,12 @@
                 </td>
                 <td>{{t.time_create|date:"d-m-Y"}}</td>
                 <td>
-                    <a href="{{ t.get_absolute_url }}" class="btn btn-outline-primary">Подробнее...</a>
+                    <form method='post' action="{{ t.get_absolute_url }}">
+                        {% csrf_token %}
+                        <input type="hidden"  name="author" value={{ t.author }}> 
+                        <button href="#" type="submit" class="btn btn-outline-primary">Подробнее...</button>
+                     </form>
+                    
                 </td>
                 <td>
                     {% copy_button 'table_tgo:copy_tgo' t.id "Копия" "Создать копию операций ТГО?" %}

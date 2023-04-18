@@ -1,0 +1,15 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white mb-3">
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <a class="navbar-brand" href="{% url 'table:index' %}">График отсутствия</a>
+            <a class="navbar-brand" href="{% url 'table_tgo:index' %}">Расписание</a>
+            <a class="navbar-brand" href="{% url 'table_tgo:index' %}">Технологические графики обслуживания</a>
+        </ul>
+
+        <span class="navbar-text">
+            <span class="userlabelinTable">
+                <span>{{user.username}}</span> | <a href="{% url 'user:logout' %}">Выйти</a>
+            </span>
+        </span>
+    </div>
+</nav>

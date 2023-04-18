@@ -1,5 +1,5 @@
 from pathlib import Path
-from decouple import config, Csv  #add this to the top
+from decouple import config  #add this to the top
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     #приложения
     'table',
     'table_tgo',
+    'timetable',
 
 
     'crispy_forms',
@@ -157,6 +158,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "table/static",
     BASE_DIR / "table_tgo/static",
     BASE_DIR / "user/static",
+    BASE_DIR / "timetable/static",
 ]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
