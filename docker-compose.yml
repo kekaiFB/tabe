@@ -1,30 +1,16 @@
-version: "3.10.6"
+version: '3.10.6'
 
 services:
-  app:
-    build:
-      context: .
-    ports:
-      - "8000:8000"
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/project
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
-    environment:
-      - DB_HOST=db
-      - DB_NAME=statistics
-      - DB_USER=postgres
-      - DB_PASS=marya0911SQL
-      - DEBUG=1
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env
     depends_on:
-<<<<<<< HEAD
-      db:
-        condition: service_healthy
-
-  db:
-    image: postgres
-=======
       - db
       # - redis
   db:
@@ -34,22 +20,12 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
       - ./dump:/tmp/dump:ro
->>>>>>> 2080efe33fa3d2fad485ce381942f320d2d72ed7
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=marya0911SQL
       - POSTGRES_DB=statistics
-<<<<<<< HEAD
-    healthcheck:
-      test: "pg_isready -U postgres"
-      interval: 5s
-    
-    ports:
-      - 5436:5432
-=======
   # redis:
   #   image: redis
 
 volumes:
   postgres_data:
->>>>>>> 2080efe33fa3d2fad485ce381942f320d2d72ed7
