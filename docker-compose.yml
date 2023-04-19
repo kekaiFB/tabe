@@ -12,14 +12,20 @@ services:
       - ./.env
     depends_on:
       - db
+      # - redis
   db:
     image: postgres
+    ports:
+      - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+      - ./dump:/tmp/dump:ro
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=marya0911SQL
       - POSTGRES_DB=statistics
+  # redis:
+  #   image: redis
 
 volumes:
   postgres_data:
