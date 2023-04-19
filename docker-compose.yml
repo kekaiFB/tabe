@@ -18,18 +18,38 @@ services:
       - DB_PASS=marya0911SQL
       - DEBUG=1
     depends_on:
+<<<<<<< HEAD
       db:
         condition: service_healthy
 
   db:
     image: postgres
+=======
+      - db
+      # - redis
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./dump:/tmp/dump:ro
+>>>>>>> 2080efe33fa3d2fad485ce381942f320d2d72ed7
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=marya0911SQL
       - POSTGRES_DB=statistics
+<<<<<<< HEAD
     healthcheck:
       test: "pg_isready -U postgres"
       interval: 5s
     
     ports:
       - 5436:5432
+=======
+  # redis:
+  #   image: redis
+
+volumes:
+  postgres_data:
+>>>>>>> 2080efe33fa3d2fad485ce381942f320d2d72ed7
