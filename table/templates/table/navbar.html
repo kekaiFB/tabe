@@ -1,9 +1,23 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white mb-3">
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
-            <a class="navbar-brand" href="{% url 'table:index' %}">График отсутствия</a>
-            <a class="navbar-brand" href="{% url 'table_tgo:index' %}">Расписание</a>
+            {% if request.resolver_match.app_name == 'table' %}
+                <span class="navbar-brand font-weight-bold">График отсутствия</span>
+            {% else %}
+                <a class="navbar-brand" href="{% url 'table:index' %}">График отсутствия</a>
+            {% endif %}
+
+            {% if request.resolver_match.app_name == 'timetable' %}
+                <span class="navbar-brand font-weight-bold">Расписание</span>
+            {% else %}
+            <a class="navbar-brand" href="{% url 'timetable:index' %}">Расписание</a>
+            {% endif %}
+
+            {% if request.resolver_match.app_name == 'table_tgo' %}
+                <span class="navbar-brand font-weight-bold">Технологические графики обслуживания</span>
+            {% else %}
             <a class="navbar-brand" href="{% url 'table_tgo:index' %}">Технологические графики обслуживания</a>
+            {% endif %}
         </ul>
 
         <span class="navbar-text">
@@ -13,3 +27,4 @@
         </span>
     </div>
 </nav>
+

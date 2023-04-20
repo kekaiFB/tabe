@@ -1,0 +1,37 @@
+{% extends "timetable/models/model_base.html" %}
+{% load tgo_tags %}
+
+{% block list %}
+    
+
+
+   {% add_button_text 'timetable:add_airlines' %}
+   <span id="airlines_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
+
+   <hr>
+   <table id="airlines_dt" class="table table-striped" style="width:100%">
+   <thead> 
+      <tr>
+         <th>Аваиакомпания</th>
+         <th>Код</th>
+         <th></th>
+         <th></th>
+      </tr>
+   </thead>
+   <tbody>
+      {% for t in airlines %}  
+         <tr>
+            <td>{{ t.title }}</td>
+            <td>{{ t.character_code }}</td>
+            <td>
+                  {% edit_button 'timetable:edit_airlines' t.id %}
+            </td>
+            <td>
+                  {% del_button 'timetable:delete_airlines' t.id %}
+            </td>
+         </tr>     
+      {% endfor %}
+   </tbody>
+   </table>
+      
+{% endblock %}

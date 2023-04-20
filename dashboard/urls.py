@@ -10,6 +10,7 @@ urlpatterns = [
     path('',  include('user.urls')),    
     path('table/', include('table.urls')), 
     path('table_tgo/', include('table_tgo.urls')), 
+    path('timetable/', include('timetable.urls')), 
 
     path('chaining/', include('smart_selects.urls')),
     path('permission/', include('permission.urls')),

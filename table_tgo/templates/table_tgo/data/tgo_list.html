@@ -23,27 +23,21 @@
             <th></th>
             <th></th>
             <th></th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         {% for t in tgo %}  
             <tr>
-                <td>
-                    {{t.title}} 
-                    {% if request.user == t.author %}
-                        {% del_button 'table_tgo:delete_tgo' t.id %}
-                        {% edit_button 'table_tgo:edit' t.id %}
-                    {% endif %}
-                    
-                </td>
+                <td>{{t.title}}</td>
                 <td>{{t.time_create|date:"d-m-Y"}}</td>
                 <td>
                     <form method='post' action="{{ t.get_absolute_url }}">
                         {% csrf_token %}
                         <input type="hidden"  name="author" value={{ t.author }}> 
                         <button href="#" type="submit" class="btn btn-outline-primary">Подробнее...</button>
-                     </form>
-                    
+                     </form>   
                 </td>
                 <td>
                     {% copy_button 'table_tgo:copy_tgo' t.id "Копия" "Создать копию операций ТГО?" %}
@@ -51,6 +45,17 @@
                 <td>
                     {% copy_button 'table_tgo:copy_tgo_all' t.id "Полная копия" "Создать полную копию ТГО?" %} 
                 </td>
+                {% if request.user == t.author %}
+                    <td>
+                        {% edit_button 'table_tgo:edit' t.id %}
+                    </td>
+                    <td>
+                        {% del_button 'table_tgo:delete_tgo' t.id %}
+                    </td>
+                {% else %}
+                    <td></td>
+                    <td></td>
+                {% endif %}
             </tr>     
         {% endfor %}
     </tbody>

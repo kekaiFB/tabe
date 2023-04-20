@@ -1,0 +1,51 @@
+{% extends "timetable/models/model_base.html" %}
+{% load tgo_tags %}
+
+{% block list %}
+    
+
+
+   {% add_button_text 'timetable:add_flight' %}
+   <span id="flight_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
+
+   <hr>
+   <table id="flight_dt" class="table table-striped" style="width:100%">
+   <thead> 
+      <tr>
+         <th>Название</th>
+         <th>Тип</th>
+         <th>Авиакомпания</th>
+         <th>Воздушное судно</th>
+         <th>Количество мест</th>
+         <th>Прилет</th>
+         <th>Вылет</th>
+         <th>Аэропорт вылета</th>
+         <th>Аэропорт прилета</th>
+         <th></th>
+         <th></th>
+      </tr>
+   </thead>
+   <tbody>
+      {% for f in flight %}  
+         <tr>
+            <td>{{ f.title }}</td>
+            <td>{{ f.type }}</td>
+            <td>{{ f.airline }}</td>
+            <td>{{ f.airplane }}</td>
+            <td>{{ f.equipmentAirplane.seats }}</td>
+            <td>{{ f.arrival }}</td>
+            <td>{{ f.departure }}</td>
+            <td>{{ f.departurelAirport }}</td>
+            <td>{{ f.arrivalAirport }}</td>
+            <td>
+                  {% edit_button 'timetable:edit_flight' f.id %}
+            </td>
+            <td>
+                  {% del_button 'timetable:delete_flight' f.id %}
+            </td>
+         </tr>     
+      {% endfor %}
+   </tbody>
+   </table>
+      
+{% endblock %}

@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from decouple import config  #add this to the top
 import dj_database_url
@@ -74,15 +75,16 @@ ROOT_URLCONF = "dashboard.urls"
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
             ],
         },
     },
@@ -102,7 +104,8 @@ WSGI_APPLICATION = "dashboard.wsgi.application"
 
 
 # Database
-DATABASES = {
+if MODE=="dev":
+    DATABASES = {
     'default': {
         'ENGINE': config('DB_ENGINE'),
         'NAME': config('DB_NAME'),
@@ -113,6 +116,12 @@ DATABASES = {
         'CONN_MAX_AGE': 500
     }
 }
+else:
+   DATABASES = {
+       'default': dj_database_url.config(
+           default=config('DATABASE_URL')
+       )
+   }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -146,7 +155,6 @@ USE_TZ = True
 
 
 #для работы со статикой
-import os
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -157,7 +165,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "table/static",
     BASE_DIR / "table_tgo/static",
     BASE_DIR / "user/static",
-    # BASE_DIR / "timetable/static",
+    BASE_DIR / "timetable/static",
 ]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

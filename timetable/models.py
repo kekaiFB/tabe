@@ -7,6 +7,7 @@ from django.db.models.signals import post_delete, post_save
 from django.core.cache import cache 
 
 from smart_selects.db_fields import ChainedForeignKey
+from django.contrib.auth.models import User
 
 # ----------------------АВИАКОМПАНИИ---------------------------------------------------------
 class Airlines(models.Model):  
@@ -82,6 +83,18 @@ class City(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+class Airport(models.Model):  
+    title = models.CharField(max_length=150, verbose_name="Название")
+    city = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name="Город")
+
+    class Meta:
+        verbose_name = 'Аэропорт'
+        verbose_name_plural = '7 Аэропорты' 
+
+    def __str__(self):
+        return self.title
 # -------------------------------------------------------------------------------
 # 
 # 
@@ -92,7 +105,7 @@ class TypeFlight(models.Model):
 
     class Meta:
         verbose_name = 'Тип рейса'
-        verbose_name_plural = '7 Типы рейсов' 
+        verbose_name_plural = '8 Типы рейсов' 
 
     def __str__(self):
         return self.title
@@ -102,21 +115,51 @@ class Flight(models.Model):
     title = models.CharField(max_length=150, verbose_name="№ рейса")
     type = models.ForeignKey(TypeFlight, on_delete=models.CASCADE, verbose_name="Тип")
     airline = models.ForeignKey(Airlines, on_delete=models.CASCADE, verbose_name="Аваиакомпания")
-    # airplane = models.ForeignKey(Airplane, on_delete=models.CASCADE, verbose_name="Воздушное судно")
-    airplane = ChainedForeignKey(
-        Airplane,
-        chained_field="airline",
-        chained_model_field="airline",
-        show_all=False, 
-        verbose_name="Воздушное судно"
-    )
-    arrival = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name="Прилет", related_name="arrival")
+    airplane = models.ForeignKey(Airplane, on_delete=models.CASCADE, verbose_name="Воздушное судно")
+    equipmentAirplane = models.ForeignKey(EquipmentAirplane, on_delete=models.CASCADE, verbose_name="Комплектация")
+    # airplane = ChainedForeignKey(
+    #     Airplane,
+    #     chained_field="airline",
+    #     chained_model_field="airline",
+    #     show_all=False, 
+    #     verbose_name="Воздушное судно"
+    # )
+
+    # equipmentAirplane = ChainedForeignKey(
+    #     EquipmentAirplane,
+    #     chained_field="airplane",
+    #     chained_model_field="airplane",
+    #     show_all=False, 
+    #     verbose_name="Комплектация"
+    # )
+    
     departure = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name="Вылет", related_name="departure")
+    arrival = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name="Прилет", related_name="arrival")
+    
+    departurelAirport = models.ForeignKey(Airport, on_delete=models.CASCADE, verbose_name="Аэропорт вылета", related_name="departurelAirport")
+    arrivalAirport = models.ForeignKey(Airport, on_delete=models.CASCADE, verbose_name="Аэропорт прилета", related_name="arrivalAirport")
+    # departurelAirport = ChainedForeignKey(
+    #     Airport,
+    #     chained_field="departure",
+    #     chained_model_field="city",
+    #     show_all=False, 
+    #     verbose_name="Аэропорт вылета",
+    #     related_name="departurelAirport"
+    # )
+
+    # arrivalAirport = ChainedForeignKey(
+    #     Airport,
+    #     chained_field="arrival",
+    #     chained_model_field="city",
+    #     show_all=False, 
+    #     verbose_name="Аэропорт прилета",
+    #     related_name="arrivalAirport"
+    # )
 
 
     class Meta:
         verbose_name = 'Рейс'
-        verbose_name_plural = '8 Рейсы' 
+        verbose_name_plural = '9 Рейсы' 
 
     def __str__(self):
         return self.title
@@ -125,7 +168,52 @@ class Flight(models.Model):
 # 
 #    
 # -------------------------РАСПИСАНИЕ------------------------------------------------------    
+class TtimetableStatus(models.Model):  
+    title = models.CharField(max_length=150, verbose_name="Название")
 
-# Статус расписания
-# Расписание
+    class Meta:
+        verbose_name = 'Статус расписания'
+        verbose_name_plural = '10 Статусы расписания' 
+
+    def __str__(self):
+        return self.title
+    
+
+class Ttimetable(models.Model):  
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="author")
+    editor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="editor")
+
+    airline = models.ForeignKey(Airlines, on_delete=models.CASCADE, verbose_name="Аваиакомпания")
+    flight = models.ForeignKey(Flight, on_delete=models.CASCADE, verbose_name="Рейс")
+
+    arrival_time = models.TimeField(auto_now=False, auto_now_add=False,  verbose_name="Прилет")
+    departure_time = models.TimeField(auto_now=False, auto_now_add=False,  verbose_name="Вылет")
+    next_day_status = models.BooleanField(default=False, verbose_name='Следующий день')
+
+    start_register_time = models.TimeField(auto_now=False, auto_now_add=False,  verbose_name="Начало Регистрации")
+    end_register_time = models.TimeField(auto_now=False, auto_now_add=False,  verbose_name="Конец Регистрации")
+
+    date_start = models.DateField(blank=True, null=True, verbose_name="Начало действия") 
+    date_end = models.DateField(blank=True, null=True, verbose_name="Конец действия") 
+    
+    tgo = models.CharField(max_length=150, verbose_name="ТГО")
+    timetablestatusight = models.ForeignKey(TtimetableStatus, on_delete=models.CASCADE, verbose_name="Статус")
+    comment = models.CharField(max_length=300, blank=True, null=True, verbose_name="Комментарий")
+
+    monday  = models.BooleanField(default=False, verbose_name='Понедельник')
+    tuesday   = models.BooleanField(default=False, verbose_name='Вторник')
+    wednesday   = models.BooleanField(default=False, verbose_name='Среда')
+    thursday   = models.BooleanField(default=False, verbose_name='Четверг')
+    friday   = models.BooleanField(default=False, verbose_name='Пятнциа')
+    saturday   = models.BooleanField(default=False, verbose_name='Суббота')
+    sunday   = models.BooleanField(default=False, verbose_name='Воскресенье')
+
+
+    class Meta:
+        verbose_name = 'Расписание'
+        verbose_name_plural = '11 Расписание' 
+
+    def __str__(self):
+        return str(self.flight)
+
 # под каждую запись (Расписание должен быть пользователь который создал, и который изменил)

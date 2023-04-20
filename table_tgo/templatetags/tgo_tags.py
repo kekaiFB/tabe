@@ -44,3 +44,9 @@ def button_text(clas, url='', id=0, text=''):
 @register.inclusion_tag('table_tgo/my_tags/copy_button.html')
 def copy_button(url='', id=0, title='', ModalTitle=''):
     return {'url': url, 'id': str(id), 'title': title, 'ModalTitle': ModalTitle}
+
+
+
+@register.inclusion_tag('table_tgo/my_tags/add_button_text.html')
+def add_button_text(url=''):
+    return {'url': url}

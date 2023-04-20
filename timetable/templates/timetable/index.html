@@ -1,0 +1,69 @@
+{% extends "timetable/base.html" %}
+{% load tgo_tags %}
+{% block content %}
+    
+    {% include 'table/navbar.html' %}
+    <h4 class="ml-2">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{title}}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="{% url 'timetable:airlines' %}">Авиакомпании</a>
+              <a class="dropdown-item" href="{% url 'timetable:airplane' %}">ВС</a>
+              <a class="dropdown-item" href="{% url 'timetable:country' %}">Страны</a>
+              <a class="dropdown-item" href="{% url 'timetable:city' %}">Города</a>
+              <a class="dropdown-item" href="{% url 'timetable:airport' %}">Аэропорты</a>
+              <a class="dropdown-item" href="{% url 'timetable:flight' %}">Рейсы</a>
+            </div>
+            {% add_button_text 'timetable:add_timetable' %}
+            <span id="timetable-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
+          <hr>
+    </h4>
+
+    
+    <table id="timetable" class="table table-striped" style="width:100%">
+        <thead> 
+            <tr>
+                <th>Аваиакомпания</th>
+                <th>Рейс</th>
+                <th>Прилет</th>
+                <th>Вылет</th>
+                <th>Следующий день</th>
+                <th>Начало Регистрации</th>
+                <th>Конец Регистрации</th>
+                <th>Начало действия</th>
+                <th>Конец действия</th>
+                <th>ТГО</th>
+                <th>Статус</th>
+                <th>Комментарий</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in timetable %}  
+                <tr>
+                    <td>{{ t.airline }}</td>
+                    <td>{{ t.flight }}</td>
+                    <td>{{ t.arrival_time }}</td>
+                    <td>{{ t.departure_time }}</td>
+                    <td>{{ t.next_day_status }}</td>
+                    <td>{{ t.start_register_time }}</td>
+                    <td>{{ t.end_register_time }}</td>
+                    <td>{{ t.date_start }}</td>
+                    <td>{{ t.date_end }}</td>
+                    <td>{{ t.tgo }}</td>
+                    <td>{{ t.timetablestatusight }}</td>
+                    <td>{{ t.comment }}</td>
+                    <td>
+                        {% edit_button 'timetable:edit_timetable' t.id %}
+                    </td>
+                    <td>
+                        {% del_button 'timetable:delete_timetable' t.id %}
+                    </td>
+                </tr>     
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

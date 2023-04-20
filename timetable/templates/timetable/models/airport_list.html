@@ -1,0 +1,39 @@
+{% extends "timetable/models/model_base.html" %}
+{% load tgo_tags %}
+
+{% block list %}
+    
+
+
+   {% add_button_text 'timetable:add_airport' %}
+   <span id="airport_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
+
+   <hr>
+   <table id="airport_dt" class="table table-striped" style="width:100%">
+   <thead> 
+      <tr>
+         <th>Название</th>
+         <th>Город</th>
+         <th>Страна</th>
+         <th></th>
+         <th></th>
+      </tr>
+   </thead>
+   <tbody>
+      {% for a in airport %}  
+         <tr>
+            <td>{{ a.title }}</td>
+            <td>{{ a.city }}</td>
+            <td>{{ a.city.country }}</td>
+            <td>
+                  {% edit_button 'timetable:edit_airport' a.id %}
+            </td>
+            <td>
+                  {% del_button 'timetable:delete_airport' a.id %}
+            </td>
+         </tr>     
+      {% endfor %}
+   </tbody>
+   </table>
+      
+{% endblock %}
