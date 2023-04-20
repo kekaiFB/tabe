@@ -9,12 +9,13 @@
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <a class="dropdown-item" href="{% url 'timetable:airlines' %}">Авиакомпании</a>
-              <a class="dropdown-item" href="{% url 'timetable:airplane' %}">ВС</a>
+              <a class="dropdown-item" href="{% url 'timetable:airplane' %}">Воздушные судна</a>
               <a class="dropdown-item" href="{% url 'timetable:country' %}">Страны</a>
               <a class="dropdown-item" href="{% url 'timetable:city' %}">Города</a>
               <a class="dropdown-item" href="{% url 'timetable:airport' %}">Аэропорты</a>
               <a class="dropdown-item" href="{% url 'timetable:flight' %}">Рейсы</a>
             </div>
+            <span id="" class="btn btn-outline-warning">Статусы</span>
             {% add_button_text 'timetable:add_timetable' %}
             <span id="timetable-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
           <hr>

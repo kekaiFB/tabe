@@ -22,6 +22,10 @@
                 </li>
               {% endif %}
             {% endfor %}
+            <li class ="nav-item">
+              {% block foreign_key %}{% endblock %}
+            </li>
+            
           </ul>
         </nav>
       </div>
