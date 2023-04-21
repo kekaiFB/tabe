@@ -34,7 +34,7 @@ $(document).ready(function () {
                     
                     if (title != '' ) {
                         //добавляем input 
-                        $(cell).html('<input type="text" placeholder="' + title + '" />');
+                        $(cell).html('<input class="form-control" type="text" placeholder="' + title + '" />');
         
                     } else {
                     }
