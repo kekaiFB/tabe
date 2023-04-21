@@ -1,5 +1,6 @@
 db.sqlite3
 migrations/
+static/*
 
 **/__pycache__/**
 *pyc
@@ -8,3 +9,5 @@ migrations/
 
 commands.txt
 data_dump.json
+
+.env
