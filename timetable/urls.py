@@ -39,6 +39,26 @@ urlpatterns = [
     path('edit_flight/<int:pk>', FlightUpdateView.as_view(), name='edit_flight'),
     path('delete_flight/<int:pk>/', FlightDeleteView.as_view(), name='delete_flight'),
 
+    path('type_flight/', TypeFlightView.as_view(), name='type_flight'),
+    path('add_type_flight/', TypeFlightCreateView.as_view(), name='add_type_flight'),
+    path('edit_type_flight/<int:pk>', TypeFlightUpdateView.as_view(), name='edit_type_flight'),
+    path('delete_type_flight/<int:pk>/', TypeFlightDeleteView.as_view(), name='delete_type_flight'),
+
+    path('type_country/', TypeCountryView.as_view(), name='type_country'),
+    path('add_type_country/', TypeCountryCreateView.as_view(), name='add_type_country'),
+    path('edit_type_country/<int:pk>', TypeCountryUpdateView.as_view(), name='edit_type_country'),
+    path('delete_type_country/<int:pk>/', TypeCountryDeleteView.as_view(), name='delete_type_country'),
+
+    path('equipmentAirplane/', EquipmentAirplaneView.as_view(), name='equipmentAirplane'),
+    path('add_equipmentAirplane/', EquipmentAirplaneCreateView.as_view(), name='add_equipmentAirplane'),
+    path('edit_equipmentAirplane/<int:pk>', EquipmentAirplaneUpdateView.as_view(), name='edit_equipmentAirplane'),
+    path('delete_equipmentAirplane/<int:pk>/', EquipmentAirplaneDeleteView.as_view(), name='delete_equipmentAirplane'),
+
+    path('timetableStatus/', TimetableStatusView.as_view(), name='timetableStatus'),
+    path('add_timetableStatus/', TimetableStatusCreateView.as_view(), name='add_timetableStatus'),
+    path('edit_timetableStatus/<int:pk>', TimetableStatusUpdateView.as_view(), name='edit_timetableStatus'),
+    path('delete_timetableStatus/<int:pk>/', TimetableStatusDeleteView.as_view(), name='delete_timetableStatus'),
+
 
 ]
 

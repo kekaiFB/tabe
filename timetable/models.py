@@ -168,7 +168,7 @@ class Flight(models.Model):
 # 
 #    
 # -------------------------РАСПИСАНИЕ------------------------------------------------------    
-class TtimetableStatus(models.Model):  
+class TimetableStatus(models.Model):  
     title = models.CharField(max_length=150, verbose_name="Название")
 
     class Meta:
@@ -179,7 +179,7 @@ class TtimetableStatus(models.Model):
         return self.title
     
 
-class Ttimetable(models.Model):  
+class Timetable(models.Model):  
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="author")
     editor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="editor")
 
@@ -197,7 +197,7 @@ class Ttimetable(models.Model):
     date_end = models.DateField(blank=True, null=True, verbose_name="Конец действия") 
     
     tgo = models.CharField(max_length=150, verbose_name="ТГО")
-    timetablestatusight = models.ForeignKey(TtimetableStatus, on_delete=models.CASCADE, verbose_name="Статус")
+    timetablestatusight = models.ForeignKey(TimetableStatus, on_delete=models.CASCADE, verbose_name="Статус")
     comment = models.CharField(max_length=300, blank=True, null=True, verbose_name="Комментарий")
 
     monday  = models.BooleanField(default=False, verbose_name='Понедельник')
@@ -215,5 +215,3 @@ class Ttimetable(models.Model):
 
     def __str__(self):
         return str(self.flight)
-
-# под каждую запись (Расписание должен быть пользователь который создал, и который изменил)

@@ -8,8 +8,8 @@ from .models import (Airlines
                      , Airport
                      , TypeFlight
                      , Flight
-                     , Ttimetable
-                     , TtimetableStatus
+                     , Timetable
+                     , TimetableStatus
                      )
 
 
@@ -107,5 +107,5 @@ class FlightAdmin(admin.ModelAdmin):
     # def typeCountry(self, obj):
     #     return obj.arrival.country.type
 
-admin.site.register(Ttimetable)
-admin.site.register(TtimetableStatus)
+admin.site.register(Timetable)
+admin.site.register(TimetableStatus)

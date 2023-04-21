@@ -9,8 +9,8 @@ from .models import (Airlines
                      , Airport
                      , TypeFlight
                      , Flight
-                     , Ttimetable
-                     , TtimetableStatus
+                     , Timetable
+                     , TimetableStatus
                      )
 from django.db.models import Prefetch
 from .utils import *
@@ -28,14 +28,13 @@ from django.shortcuts import redirect
 class TimeTableView(DataMixin, ListView):
     template_name = 'timetable/index.html'
     context_object_name = 'timetable'
-    model = Ttimetable
+    model = Timetable
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Расписание")
         context = dict(list(context.items()) + list(c_def.items()))
-        return context
-    
+        return context   
 
 class TimeTableCreateView(DataMixin, BSModalCreateView):
     template_name = 'table_tgo/edit_data/create.html'
@@ -43,15 +42,13 @@ class TimeTableCreateView(DataMixin, BSModalCreateView):
     success_url = reverse_lazy('timetable:index')
 
 class TimeTableUpdateView(BSModalUpdateView):
-    model = Ttimetable
+    model = Timetable
     template_name = 'table_tgo/edit_data/update.html'
     form_class = TimeTableModelForm
     success_url = reverse_lazy('timetable:index')
 
-        
-
 class TimeTableDeleteView(BSModalDeleteView):
-    model = Ttimetable
+    model = Timetable
     template_name = 'table_tgo/edit_data/delete.html'
     success_url = reverse_lazy('timetable:index')
 # -------------------------------------------------------------------
@@ -78,7 +75,6 @@ class AirlinesUpdateView(BSModalUpdateView):
     template_name = 'table_tgo/edit_data/update.html'
     form_class = AirlinesModelForm
     success_url = reverse_lazy('timetable:airlines')
-
 
 class AirlinesDeleteView(BSModalDeleteView):
     model = Airlines
@@ -109,7 +105,6 @@ class AirplaneUpdateView(BSModalUpdateView):
     form_class = AirplaneModelForm
     success_url = reverse_lazy('timetable:airplane')
 
-
 class AirplaneDeleteView(BSModalDeleteView):
     model = Airplane
     template_name = 'table_tgo/edit_data/delete.html'
@@ -138,7 +133,6 @@ class CountryUpdateView(BSModalUpdateView):
     template_name = 'table_tgo/edit_data/update.html'
     form_class = CountryModelForm
     success_url = reverse_lazy('timetable:country')
-
 
 class CountryDeleteView(BSModalDeleteView):
     model = Country
@@ -169,7 +163,6 @@ class CityUpdateView(BSModalUpdateView):
     form_class = CityModelForm
     success_url = reverse_lazy('timetable:city')
 
-
 class CityDeleteView(BSModalDeleteView):
     model = City
     template_name = 'table_tgo/edit_data/delete.html'
@@ -198,7 +191,6 @@ class AirportUpdateView(BSModalUpdateView):
     template_name = 'table_tgo/edit_data/update.html'
     form_class = AirportModelForm
     success_url = reverse_lazy('timetable:airport')
-
 
 class AirportDeleteView(BSModalDeleteView):
     model = Airport
@@ -229,8 +221,123 @@ class FlightUpdateView(BSModalUpdateView):
     form_class = FlightModelForm
     success_url = reverse_lazy('timetable:flight')
 
-
 class FlightDeleteView(BSModalDeleteView):
     model = Flight
     template_name = 'table_tgo/edit_data/delete.html'
     success_url = reverse_lazy('timetable:flight')
+# -------------------------------------------------------------------
+
+
+# ---------------------------------Типы рейсов----------------------
+class TypeFlightView(DataMixin, MyModel, ListView):
+    template_name = 'timetable/models/typeFlight_list.html'
+    context_object_name = 'typeFligh'
+    model = TypeFlight
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Типы рейсов")
+        return dict(list(context.items()) + list(c_def.items()))
+    
+class TypeFlightCreateView(DataMixin, BSModalCreateView):
+    template_name = 'table_tgo/edit_data/create.html'
+    form_class = TypeFlightModelForm
+    success_url = reverse_lazy('timetable:type_flight')
+
+class TypeFlightUpdateView(BSModalUpdateView):
+    model = TypeFlight
+    template_name = 'table_tgo/edit_data/update.html'
+    form_class = TypeFlightModelForm
+    success_url = reverse_lazy('timetable:type_flight')
+
+class TypeFlightDeleteView(BSModalDeleteView):
+    model = TypeFlight
+    template_name = 'table_tgo/edit_data/delete.html'
+    success_url = reverse_lazy('timetable:type_flight')
+# -------------------------------------------------------------------
+
+
+# ---------------------------------Типы стран----------------------
+class TypeCountryView(DataMixin, MyModel, ListView):
+    template_name = 'timetable/models/typeCountry_list.html'
+    context_object_name = 'typeCountry'
+    model = TypeCountry
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Типы стран")
+        return dict(list(context.items()) + list(c_def.items()))
+    
+class TypeCountryCreateView(DataMixin, BSModalCreateView):
+    template_name = 'table_tgo/edit_data/create.html'
+    form_class = TypeCountryModelForm
+    success_url = reverse_lazy('timetable:type_country')
+
+class TypeCountryUpdateView(BSModalUpdateView):
+    model = TypeCountry
+    template_name = 'table_tgo/edit_data/update.html'
+    form_class = TypeCountryModelForm
+    success_url = reverse_lazy('timetable:type_country')
+
+class TypeCountryDeleteView(BSModalDeleteView):
+    model = TypeCountry
+    template_name = 'table_tgo/edit_data/delete.html'
+    success_url = reverse_lazy('timetable:type_country')
+# -------------------------------------------------------------------
+
+
+# ---------------------------------Комплектация ВС----------------------
+class EquipmentAirplaneView(DataMixin, MyModel, ListView):
+    template_name = 'timetable/models/equipmentAirplane_list.html'
+    context_object_name = 'EquipmentAirplane'
+    model = EquipmentAirplane
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Комплектация ВС")
+        return dict(list(context.items()) + list(c_def.items()))
+    
+class EquipmentAirplaneCreateView(DataMixin, BSModalCreateView):
+    template_name = 'table_tgo/edit_data/create.html'
+    form_class = EquipmentAirplaneModelForm
+    success_url = reverse_lazy('timetable:equipmentAirplane')
+
+class EquipmentAirplaneUpdateView(BSModalUpdateView):
+    model = EquipmentAirplane
+    template_name = 'table_tgo/edit_data/update.html'
+    form_class = EquipmentAirplaneModelForm
+    success_url = reverse_lazy('timetable:equipmentAirplane')
+
+class EquipmentAirplaneDeleteView(BSModalDeleteView):
+    model = EquipmentAirplane
+    template_name = 'table_tgo/edit_data/delete.html'
+    success_url = reverse_lazy('timetable:equipmentAirplane')
+# -------------------------------------------------------------------
+
+
+# ---------------------------------Статусы рейсов----------------------
+class TimetableStatusView(DataMixin, MyModel, ListView):
+    template_name = 'timetable/models/timetableStatus_list.html'
+    context_object_name = 'TimetableStatus'
+    model = TimetableStatus
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Статусы рейсов")
+        return dict(list(context.items()) + list(c_def.items()))
+    
+class TimetableStatusCreateView(DataMixin, BSModalCreateView):
+    template_name = 'table_tgo/edit_data/create.html'
+    form_class = TimetableStatusModelForm
+    success_url = reverse_lazy('timetable:timetableStatus')
+
+class TimetableStatusUpdateView(BSModalUpdateView):
+    model = TimetableStatus
+    template_name = 'table_tgo/edit_data/update.html'
+    form_class = TimetableStatusModelForm
+    success_url = reverse_lazy('timetable:timetableStatus')
+
+class TimetableStatusDeleteView(BSModalDeleteView):
+    model = TimetableStatus
+    template_name = 'table_tgo/edit_data/delete.html'
+    success_url = reverse_lazy('timetable:timetableStatus')    
