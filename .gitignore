@@ -8,3 +8,5 @@ migrations/
 
 commands.txt
 data_dump.json
+
+.env
