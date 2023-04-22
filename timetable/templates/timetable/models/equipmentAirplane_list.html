@@ -2,10 +2,12 @@
 {% load tgo_tags %}
 
 {% block list %}
-   <a class="btn btn-outline-primary" href="{% url 'timetable:airplane' %}">Назад</a>
-   {% add_button_text 'timetable:add_equipmentAirplane' %}
-   <span id="equipmentAirplane_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
-
+   <span class="h3">Комплектация ВС</span>
+   <div class="mt-2">
+      <a class="btn btn-outline-primary" href="{% url 'timetable:airplane' %}">Назад</a>
+      {% add_button_text 'timetable:add_equipmentAirplane' %}
+      <span id="equipmentAirplane_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
+   </div>
    <hr>
    <table id="equipmentAirplane_dt" class="table table-striped" style="width:100%">
    <thead> 

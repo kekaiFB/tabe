@@ -2,10 +2,12 @@
 {% load tgo_tags %}
 
 {% block list %}
-   <a class="btn btn-outline-primary" href="{% url 'timetable:flight' %}">Назад</a>
-   {% add_button_text 'timetable:add_type_flight' %}
-   <span id="type_flight_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
-
+   <span class="h3">Типы рейсов</span>
+   <div class="mt-2">
+      <a class="btn btn-outline-primary" href="{% url 'timetable:flight' %}">Назад</a>
+      {% add_button_text 'timetable:add_type_flight' %}
+      <span id="type_flight_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
+   </div>  
    <hr>
    <table id="type_flight_dt" class="table table-striped" style="width:100%">
    <thead> 
