@@ -1,4 +1,4 @@
-Депрой
+## Деплой
 
 ```
 ssh 188.120.254.148 -l ubuntu
@@ -9,9 +9,17 @@ sudo docker-compose up --force-recreate --build -d
 
 ```
 
-.env
+## .env
 
 `.env.example` - чтоб в разных окружениях можно было держать разные значение
 перед разработкой надо сделать `cp .env.example .env`
-
 ну, и добавлять по мере необходимости значение
+
+
+## Дамп базы
+
+ssh 188.120.254.148 -l ubuntu
+cd ~/projects/tabe
+sudo docker-compose exec db bash
+cd /tmp/dump
+pg_dumpall -U postgres > dump.out

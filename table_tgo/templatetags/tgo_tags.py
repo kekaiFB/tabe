@@ -50,3 +50,14 @@ def copy_button(url='', id=0, title='', ModalTitle=''):
 @register.inclusion_tag('table_tgo/my_tags/add_button_text.html')
 def add_button_text(url=''):
     return {'url': url}
+
+
+
+
+
+#--------------РАСПИСАНИЕ------------
+
+
+@register.inclusion_tag('timetable/my_tags/del_button.html')
+def del_button_timetable(url='', id=0, history_id = 0):
+    return {'url': url, 'id': str(id), 'history_id': str(history_id)}

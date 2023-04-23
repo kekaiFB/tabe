@@ -1,0 +1,38 @@
+{% extends "timetable/models/model_base.html" %}
+{% load tgo_tags %}
+
+{% block list %}
+   <span class="h3">Комплектация ВС</span>
+   <div class="mt-2">
+      <a class="btn btn-outline-primary" href="{% url 'timetable:airplane' %}">Назад</a>
+      {% add_button_text 'timetable:add_equipmentAirplane' %}
+      <span id="equipmentAirplane_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
+   </div>
+   <hr>
+   <table id="equipmentAirplane_dt" class="table table-striped" style="width:100%">
+   <thead> 
+      <tr>
+         <th>Воздушное судно</th>
+         <th>Комплектация</th>
+         <th>Количетсво мест</th>
+         <th></th>
+         <th></th>
+      </tr>
+   </thead>
+   <tbody>
+      {% for eq in EquipmentAirplane %}  
+         <tr>
+            <td>{{ eq.airplane }}</td>
+            <td>{{ eq.equipment }}</td>
+            <td>{{ eq.seats }}</td>
+            <td>
+                  {% edit_button 'timetable:edit_equipmentAirplane' eq.id %}
+            </td>
+            <td>
+                  {% del_button 'timetable:delete_equipmentAirplane' eq.id %}
+            </td>
+         </tr>     
+      {% endfor %}
+   </tbody>
+   </table>
+{% endblock %} 

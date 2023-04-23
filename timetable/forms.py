@@ -8,15 +8,15 @@ from .models import (Airlines
                      , Airport
                      , TypeFlight
                      , Flight
-                     , TtimetableStatus
-                     , Ttimetable
+                     , TimetableStatus
+                     , Timetable
                      )
 from django import forms
 
 
 class TimeTableModelForm(BSModalModelForm):
     class Meta:
-        model = Ttimetable
+        model = Timetable
         fields = '__all__'
 
 class AirlinesModelForm(BSModalModelForm):
@@ -61,7 +61,7 @@ class TypeFlightModelForm(BSModalModelForm):
 
 class TimetableStatusModelForm(BSModalModelForm):
     class Meta:
-        model = TtimetableStatus
+        model = TimetableStatus
         fields = '__all__'
 
 class FlightModelForm(BSModalModelForm):
@@ -69,5 +69,9 @@ class FlightModelForm(BSModalModelForm):
         model = Flight
         fields = '__all__'
 
+class HistoryTimetableModelForm(BSModalModelForm):
+    class Meta:
+        model = Timetable
+        fields = '__all__'
 
 

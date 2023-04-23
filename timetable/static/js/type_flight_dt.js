@@ -1,10 +1,10 @@
 $(document).ready(function () {
 
-    $('#airlines_dt thead tr')
+    $('#type_flight_dt thead tr')
     .clone(true)
-    .addClass('filters-timetable')
-    .appendTo('#airlines_dt thead');
-    var airlines_dt = $('#airlines_dt').DataTable({
+    .addClass('filters-city')
+    .appendTo('#type_flight_dt thead');
+    var type_flight_dt = $('#type_flight_dt').DataTable({
             "dom": 'ftipr',
              //--------------------Память фильторв---------------------------
              stateSave: true,
@@ -27,7 +27,7 @@ $(document).ready(function () {
                 .eq(0)
                 .each(function (colIdx) {
                     // перебираем каждый элеемент клонированного 
-                    var cell = $('.filters-timetable th').eq(
+                    var cell = $('.filters-city th').eq(
                         $(api.column(colIdx).header()).index()
                     );
                     var title = $(cell).text();
@@ -42,7 +42,7 @@ $(document).ready(function () {
                     // делаем input "живым"
                     $(
                         'input',
-                        $('.filters-timetable th').eq($(api.column(colIdx).header()).index())
+                        $('.filters-city th').eq($(api.column(colIdx).header()).index())
                     )
                         .off('keyup change')
                         .on('change', function (e) {
@@ -81,7 +81,7 @@ $(document).ready(function () {
                     if ( colSearch.search ) {
                         res = colSearch.search.replace('))))','')
                         res = res.replace('((((','')
-                        $('input', $('.filters-timetable th')[colIdx]).val( res );
+                        $('input', $('.filters-city th')[colIdx]).val( res );
                     }
                     savedSelected = state.selected;
                     });
@@ -92,14 +92,14 @@ $(document).ready(function () {
         });
 
             //Сбросить фильтры
-    $('#airlines_dt-resetFilter').on('click', function (e) {
-        airlines_dt_resetFilters()
+    $('#type_flight_dt-resetFilter').on('click', function (e) {
+        type_flight_dt_resetFilters()
     });
 
 
 
-    function airlines_dt_resetFilters() {
-        airlines_dt.state.clear();
+    function type_flight_dt_resetFilters() {
+        type_flight_dt.state.clear();
         location.reload()
     } 
 });

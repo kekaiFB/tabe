@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'table_tgo',
     'timetable',
 
-
+    #разное
     'crispy_forms',
     'crispy_bootstrap5',
     'widget_tweaks',
@@ -41,13 +41,11 @@ INSTALLED_APPS = [
     #авторизация и регистрация
     'user.apps.UserConfig',
 
-    #Для хероку
-    'whitenoise.runserver_nostatic',
-
     #опитимизация
     'debug_toolbar',
 
-
+    #История изменений
+    'simple_history',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -62,14 +60,12 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 
-    #Для хероку
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-
+    #опитимизация
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-]
 
-#Для хероку
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    #История изменений
+    'simple_history.middleware.HistoryRequestMiddleware',
+]
 
 ROOT_URLCONF = "dashboard.urls"
 
@@ -180,6 +176,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://test.polyslot.ru']
+CSRF_COOKIE_DOMAIN = 'polyslot.ru'
 
 #Подтверждение почты
 EMAIL_HOST = config('EMAIL_HOST')

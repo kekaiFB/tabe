@@ -1,0 +1,34 @@
+{% extends "timetable/models/model_base.html" %}
+{% load tgo_tags %}
+
+{% block list %}
+   <span class="h3">Типы стран</span>
+   <div class="mt-2">
+      <a class="btn btn-outline-primary" href="{% url 'timetable:country' %}">Назад</a>
+      {% add_button_text 'timetable:add_type_country' %}
+      <span id="type_country_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
+   </div>
+   <hr>
+   <table id="type_country_dt" class="table table-striped" style="width:100%">
+   <thead> 
+      <tr>
+         <th>Название</th>
+         <th></th>
+         <th></th>
+      </tr>
+   </thead>
+   <tbody>
+      {% for tc in typeCountry %}  
+         <tr>
+            <td>{{ tc.title }}</td>
+            <td>
+                  {% edit_button 'timetable:edit_type_country' tc.id %}
+            </td>
+            <td>
+                  {% del_button 'timetable:delete_type_country' tc.id %}
+            </td>
+         </tr>     
+      {% endfor %}
+   </tbody>
+   </table>
+{% endblock %} 

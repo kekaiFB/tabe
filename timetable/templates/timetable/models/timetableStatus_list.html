@@ -1,0 +1,35 @@
+{% extends "timetable/base.html" %}
+{% load tgo_tags %}
+
+{% block content %}
+   {% include 'table/navbar.html' %}
+   <span class="h3">Статусы полетов</span>
+   <div class="mt-2">
+      <a class="btn btn-outline-primary" href="{% url 'timetable:index' %}">Назад</a>
+      {% add_button_text 'timetable:add_timetableStatus' %}
+      <span id="timetableStatus_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
+   </div>
+   <hr>
+   <table id="timetableStatus_dt" class="table table-striped" style="width:100%">
+   <thead> 
+      <tr>
+         <th>Название</th>
+         <th></th>
+         <th></th>
+      </tr>
+   </thead>
+   <tbody>
+      {% for tt in TimetableStatus %}  
+         <tr>
+            <td>{{ tt.title }}</td>
+            <td>
+                  {% edit_button 'timetable:edit_timetableStatus' tt.id %}
+            </td>
+            <td>
+                  {% del_button 'timetable:delete_timetableStatus' tt.id %}
+            </td>
+         </tr>     
+      {% endfor %}
+   </tbody>
+   </table>
+{% endblock %} 

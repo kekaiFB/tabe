@@ -4,7 +4,7 @@
 {% block list %}
     
 
-   <span id="" class="btn btn-outline-warning">Типы стран</span>
+   <a class="btn btn-outline-warning" href="{% url 'timetable:type_country' %}">Типы стран</a>
    {% add_button_text 'timetable:add_country' %}
    <span id="country_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
 

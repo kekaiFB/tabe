@@ -9,6 +9,9 @@ from django.core.cache import cache
 from smart_selects.db_fields import ChainedForeignKey
 from django.contrib.auth.models import User
 
+from simple_history.models import HistoricalRecords
+
+
 # ----------------------АВИАКОМПАНИИ---------------------------------------------------------
 class Airlines(models.Model):  
     title = models.CharField(max_length=150, verbose_name="Название")
@@ -168,7 +171,7 @@ class Flight(models.Model):
 # 
 #    
 # -------------------------РАСПИСАНИЕ------------------------------------------------------    
-class TtimetableStatus(models.Model):  
+class TimetableStatus(models.Model):  
     title = models.CharField(max_length=150, verbose_name="Название")
 
     class Meta:
@@ -179,7 +182,7 @@ class TtimetableStatus(models.Model):
         return self.title
     
 
-class Ttimetable(models.Model):  
+class Timetable(models.Model):  
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="author")
     editor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="editor")
 
@@ -197,8 +200,8 @@ class Ttimetable(models.Model):
     date_end = models.DateField(blank=True, null=True, verbose_name="Конец действия") 
     
     tgo = models.CharField(max_length=150, verbose_name="ТГО")
-    timetablestatusight = models.ForeignKey(TtimetableStatus, on_delete=models.CASCADE, verbose_name="Статус")
-    comment = models.CharField(max_length=300, blank=True, null=True, verbose_name="Комментарий")
+    timetablestatusight = models.ForeignKey(TimetableStatus, on_delete=models.CASCADE, verbose_name="Статус")
+    comment = models.CharField(max_length=300, blank=True, null=True, default='', verbose_name="Комментарий")
 
     monday  = models.BooleanField(default=False, verbose_name='Понедельник')
     tuesday   = models.BooleanField(default=False, verbose_name='Вторник')
@@ -208,6 +211,8 @@ class Ttimetable(models.Model):
     saturday   = models.BooleanField(default=False, verbose_name='Суббота')
     sunday   = models.BooleanField(default=False, verbose_name='Воскресенье')
 
+    history = HistoricalRecords(verbose_name='Версия', cascade_delete_history=True, related_name='TimetableHistory')
+
 
     class Meta:
         verbose_name = 'Расписание'
@@ -215,5 +220,11 @@ class Ttimetable(models.Model):
 
     def __str__(self):
         return str(self.flight)
-
-# под каждую запись (Расписание должен быть пользователь который создал, и который изменил)
+    
+    def save_without_historical_record(self, *args, **kwargs):
+        self.skip_history_when_saving = True
+        try:
+            ret = self.save(*args, **kwargs)
+        finally:
+            del self.skip_history_when_saving
+        return ret

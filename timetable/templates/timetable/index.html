@@ -15,7 +15,7 @@
               <a class="dropdown-item" href="{% url 'timetable:airport' %}">Аэропорты</a>
               <a class="dropdown-item" href="{% url 'timetable:flight' %}">Рейсы</a>
             </div>
-            <span id="" class="btn btn-outline-warning">Статусы</span>
+            <a class="btn btn-outline-warning" href="{% url 'timetable:timetableStatus' %}">Статусы</a>
             {% add_button_text 'timetable:add_timetable' %}
             <span id="timetable-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
           <hr>
