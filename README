@@ -23,3 +23,11 @@ cd ~/projects/tabe
 sudo docker-compose exec db bash
 cd /tmp/dump
 pg_dumpall -U postgres > dump.out
+
+## Просмотр логов 
+
+приложения
+sudo docker-compose logs web
+
+базы
+sudo docker-compose logs db
