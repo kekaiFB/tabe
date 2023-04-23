@@ -1,7 +1,8 @@
-{% extends "timetable/models/model_base.html" %}
+{% extends "timetable/base.html" %}
 {% load tgo_tags %}
 
-{% block list %}
+{% block content %}
+   {% include 'table/navbar.html' %}
    <span class="h3">Статусы полетов</span>
    <div class="mt-2">
       <a class="btn btn-outline-primary" href="{% url 'timetable:index' %}">Назад</a>

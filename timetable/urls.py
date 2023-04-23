@@ -59,6 +59,10 @@ urlpatterns = [
     path('edit_timetableStatus/<int:pk>', TimetableStatusUpdateView.as_view(), name='edit_timetableStatus'),
     path('delete_timetableStatus/<int:pk>/', TimetableStatusDeleteView.as_view(), name='delete_timetableStatus'),
 
+    path('historyTimetable/<int:id>', HistoryTimetableView.as_view(), name='historyTimetable'),
+    path('edit_historyTimetable/<int:pk>', HistoryTimetableUpdateView.as_view(), name='edit_historyTimetable'),
+    path('delete_historyTimetable/<int:pk>/<int:history_id>/', HistoryTimetableDeleteView.as_view(), name='delete_historyTimetable'),
+
 
 ]
 

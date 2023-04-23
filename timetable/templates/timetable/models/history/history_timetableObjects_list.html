@@ -1,0 +1,64 @@
+{% extends "timetable/base.html" %}
+{% load tgo_tags %}
+
+{% block content %}
+   {% include 'table/navbar.html' %}
+
+   <span class="h3">Контроль версий {{ timetable_id }}</span>
+   <div class="mt-2">
+      <a class="btn btn-outline-primary" href="{% url 'timetable:index' %}">Назад</a>
+      <span id="timetableStatus_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
+   </div>
+   <hr>
+
+    
+   <table id="timetable" class="table table-striped" style="width:100%">
+        <thead> 
+            <tr>
+                <th>Дата версии</th>
+                <th>Комментарий</th>
+                <th>Аваиакомпания</th>
+                <th>Рейс</th>
+                <th>Прилет</th>
+                <th>Вылет</th>
+                <th>Следующий день</th>
+                <th>Начало Регистрации</th>
+                <th>Конец Регистрации</th>
+                <th>Начало действия</th>
+                <th>Конец действия</th>
+                <th>ТГО</th>
+                <th>Статус</th>
+                <th>Комментарий</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in timetable %}  
+                <tr>
+                    <td class="text-primary">{{ t.history_date|date:'Y-m-d' }}</td>
+                    <td class="text-primary">{{ t.history_change_reason }}</td>
+                    <td>{{ t.airline }}</td>
+                    <td>{{ t.flight }}</td>
+                    <td>{{ t.arrival_time }}</td>
+                    <td>{{ t.departure_time }}</td>
+                    <td>{{ t.next_day_status }}</td>
+                    <td>{{ t.start_register_time }}</td>
+                    <td>{{ t.end_register_time }}</td>
+                    <td>{{ t.date_start|date:'Y-m-d' }}</td>
+                    <td>{{ t.date_end|date:'Y-m-d' }}</td>
+                    <td>{{ t.tgo }}</td>
+                    <td>{{ t.timetablestatusight }}</td>
+                    <td>{{ t.comment }}</td>
+                    <td>
+                        {% edit_button 'timetable:edit_historyTimetable' t.id %}
+                    </td>
+                    <td>
+                        {% del_button_timetable 'timetable:delete_historyTimetable' t.id t.history_id %}
+                    </td>
+                </tr>     
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -69,5 +69,9 @@ class FlightModelForm(BSModalModelForm):
         model = Flight
         fields = '__all__'
 
+class HistoryTimetableModelForm(BSModalModelForm):
+    class Meta:
+        model = Timetable
+        fields = '__all__'
 
 

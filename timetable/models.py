@@ -9,6 +9,9 @@ from django.core.cache import cache
 from smart_selects.db_fields import ChainedForeignKey
 from django.contrib.auth.models import User
 
+from simple_history.models import HistoricalRecords
+
+
 # ----------------------АВИАКОМПАНИИ---------------------------------------------------------
 class Airlines(models.Model):  
     title = models.CharField(max_length=150, verbose_name="Название")
@@ -198,7 +201,7 @@ class Timetable(models.Model):
     
     tgo = models.CharField(max_length=150, verbose_name="ТГО")
     timetablestatusight = models.ForeignKey(TimetableStatus, on_delete=models.CASCADE, verbose_name="Статус")
-    comment = models.CharField(max_length=300, blank=True, null=True, verbose_name="Комментарий")
+    comment = models.CharField(max_length=300, blank=True, null=True, default='', verbose_name="Комментарий")
 
     monday  = models.BooleanField(default=False, verbose_name='Понедельник')
     tuesday   = models.BooleanField(default=False, verbose_name='Вторник')
@@ -208,6 +211,8 @@ class Timetable(models.Model):
     saturday   = models.BooleanField(default=False, verbose_name='Суббота')
     sunday   = models.BooleanField(default=False, verbose_name='Воскресенье')
 
+    history = HistoricalRecords(verbose_name='Версия', cascade_delete_history=True, related_name='TimetableHistory')
+
 
     class Meta:
         verbose_name = 'Расписание'
@@ -215,3 +220,11 @@ class Timetable(models.Model):
 
     def __str__(self):
         return str(self.flight)
+    
+    def save_without_historical_record(self, *args, **kwargs):
+        self.skip_history_when_saving = True
+        try:
+            ret = self.save(*args, **kwargs)
+        finally:
+            del self.skip_history_when_saving
+        return ret
