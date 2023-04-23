@@ -180,6 +180,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://test.polyslot.ru']
+CSRF_COOKIE_DOMAIN = 'polyslot.ru'
 
 #Подтверждение почты
 EMAIL_HOST = config('EMAIL_HOST')
