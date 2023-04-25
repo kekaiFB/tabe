@@ -1,5 +1,6 @@
 {% extends "timetable/base.html" %}
 {% load tgo_tags %}
+{% load timetable_tags %}
 {% block content %}
     
     {% include 'table/navbar.html' %}
@@ -21,7 +22,6 @@
           <hr>
     </h4>
 
-    
     <table id="timetable" class="table table-striped" style="width:100%">
         <thead> 
             <tr>
@@ -42,29 +42,28 @@
             </tr>
         </thead>
         <tbody>
-            {% for t in timetable %}  
-                <tr>
-                    <td>{{ t.airline }}</td>
-                    <td>{{ t.flight }}</td>
-                    <td>{{ t.arrival_time }}</td>
-                    <td>{{ t.departure_time }}</td>
-                    <td>{{ t.next_day_status }}</td>
-                    <td>{{ t.start_register_time }}</td>
-                    <td>{{ t.end_register_time }}</td>
-                    <td>{{ t.date_start }}</td>
-                    <td>{{ t.date_end }}</td>
-                    <td>{{ t.tgo }}</td>
-                    <td>{{ t.timetablestatusight }}</td>
-                    <td>{{ t.comment }}</td>
-                    <td>
-                        {% edit_button 'timetable:edit_timetable' t.id %}
-                    </td>
-                    <td>
-                        {% del_button 'timetable:delete_timetable' t.id %}
-                    </td>
-                </tr>     
-            {% endfor %}
+            {% for t, th in timetable %}  
+            <tr style="background-color: {% background t.timetablestatusight %}; color: {% color t.timetablestatusight %}">
+                {% classTimetable t.airline 'airline' th %}
+                {% classTimetable t.flight 'flight' th %}
+                {% classTimetable t.arrival_time 'arrival_time' th %}
+                {% classTimetable t.departure_time 'departure_time' th %}
+                {% classTimetable t.next_day_status 'next_day_status' th %}
+                {% classTimetable t.start_register_time 'start_register_time' th %}
+                {% classTimetable t.end_register_time 'end_register_time' th %}
+                {% classTimetable t.date_start 'date_start' th %}
+                {% classTimetable t.date_end 'date_end' th %}
+                {% classTimetable t.tgo 'tgo' th %}
+                {% classTimetable t.timetablestatusight 'timetablestatusight' th %}
+                {% classTimetable t.comment 'comment' th %}
+                <td>
+                    {% edit_button 'timetable:edit_timetable' t.id %}
+                </td>
+                <td>
+                    {% del_button 'timetable:delete_timetable' t.id %}
+                </td>
+            </tr>     
+        {% endfor %}
         </tbody>
     </table>
-
 {% endblock %}

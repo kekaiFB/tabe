@@ -1,33 +1,33 @@
 
 from django.views.generic import ListView, DetailView
 from django.urls import reverse
-
+from django.views.generic import TemplateView
 from .models import *
-from django.db.models import Prefetch
 from .utils import *
 from .forms import *
-from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from bootstrap_modal_forms.generic import (
    BSModalCreateView
   , BSModalDeleteView
   , BSModalUpdateView
 )
+from django.contrib.auth.decorators import login_required
+from .templatetags.timetable_tags import timetable_history_tag
 
 # ---------------------------------Расписание----------------------
-class TimeTableView(DataMixin, ListView):
+class TimeTableView(DataMixin, MyModel, TemplateView):
     template_name = 'timetable/index.html'
-    context_object_name = 'timetable'
-    model = Timetable
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title="Расписание")
+        title = title='Расписание'
+        c_def = self.get_user_context(title=title)
         context = dict(list(context.items()) + list(c_def.items()))
-        return context   
 
-    def get_queryset(self):
-        return super(TimeTableView, self).get_queryset().select_related()
+        t = Timetable.objects.select_related()
+        th = timetable_history_tag(t)
+        context['timetable'] = zip(t, th)
+        return context
 
 class TimeTableCreateView(DataMixin, BSModalCreateView):
     template_name = 'table_tgo/edit_data/create.html'
@@ -386,19 +386,27 @@ class HistoryTimetableView(DataMixin, MyModel, ListView):
         return context
     
     def get_queryset(self):
-        return super(HistoryTimetableView, self).get_queryset().filter(id = self.kwargs['id'])[0].history.select_related('flight', 'airline', 'timetablestatusight')
+        return super(HistoryTimetableView, self).get_queryset().get(id = self.kwargs['id']).history.select_related('flight', 'airline', 'timetablestatusight').order_by('-history_date')
 
-class HistoryTimetableUpdateView(BSModalUpdateView):
-    model = Timetable
-    template_name = 'timetable/edit_data/updateHistoryTimetable.html'
-    form_class = HistoryTimetableModelForm
-    success_url = reverse_lazy('timetable:historyTimetable')
+
+@login_required
+def editHistoryObject(self, pk,  history_id):
+    elem = Timetable.objects.filter(id = pk)[0].history.select_related('flight', 'airline', 'timetablestatusight')
+    elem.filter(history_id = history_id)[0].instance.save()
+    elem.filter(history_id = history_id).delete()
+
+    return HttpResponseRedirect(reverse(
+            'timetable:historyTimetable',
+            kwargs={
+                'id': pk
+            }
+        ))
+
 
 class HistoryTimetableDeleteView(BSModalDeleteView):
     model = Timetable
     template_name = 'table_tgo/edit_data/delete.html'
 
-    
     def form_valid(self, form):
         self.object = self.get_object()
         success_url = self.get_success_url()

@@ -4,7 +4,7 @@ from .views import *
 app_name = 'timetable'
 
 urlpatterns = [
-    path('', TimeTableView.as_view(), name='index'),
+    path('timetable', TimeTableView.as_view(), name='index'),
     path('add_timetable/', TimeTableCreateView.as_view(), name='add_timetable'),
     path('edit_timetable/<int:pk>', TimeTableUpdateView.as_view(), name='edit_timetable'),
     path('delete_timetable/<int:pk>/', TimeTableDeleteView.as_view(), name='delete_timetable'),
@@ -60,7 +60,7 @@ urlpatterns = [
     path('delete_timetableStatus/<int:pk>/', TimetableStatusDeleteView.as_view(), name='delete_timetableStatus'),
 
     path('historyTimetable/<int:id>', HistoryTimetableView.as_view(), name='historyTimetable'),
-    path('edit_historyTimetable/<int:pk>', HistoryTimetableUpdateView.as_view(), name='edit_historyTimetable'),
+    path('editHistoryObject/<int:pk>/<int:history_id>/', editHistoryObject, name='editHistoryObject'),
     path('delete_historyTimetable/<int:pk>/<int:history_id>/', HistoryTimetableDeleteView.as_view(), name='delete_historyTimetable'),
 
 

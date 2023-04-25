@@ -61,3 +61,8 @@ def add_button_text(url=''):
 @register.inclusion_tag('timetable/my_tags/del_button.html')
 def del_button_timetable(url='', id=0, history_id = 0):
     return {'url': url, 'id': str(id), 'history_id': str(history_id)}
+
+
+@register.inclusion_tag('timetable/my_tags/button_edit.html')
+def edit_button_timetable(url='', id=0, history_id = 0):
+    return {'url': url, 'id': str(id), 'history_id': str(history_id)}

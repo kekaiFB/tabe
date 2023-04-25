@@ -213,7 +213,6 @@ class Timetable(models.Model):
 
     history = HistoricalRecords(verbose_name='Версия', cascade_delete_history=True, related_name='TimetableHistory')
 
-
     class Meta:
         verbose_name = 'Расписание'
         verbose_name_plural = '11 Расписание' 

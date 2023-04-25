@@ -19,18 +19,12 @@ from bootstrap_modal_forms.generic import (
 )
 from django.shortcuts import redirect 
 
-import asyncio
-import time
-from datetime import datetime
-
-
 
 class TGOIndex(DataMixin, ListView):
     template_name = 'table_tgo/index.html'
     context_object_name = 'tgo'
     model = TGO
     
-
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Список ТГО")
@@ -48,7 +42,6 @@ class TGOIndex(DataMixin, ListView):
             if filter == 'all':
                 context['filter'] = 'all'
         return context
-
 
     def post(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
@@ -69,7 +62,6 @@ class TGOIndex(DataMixin, ListView):
             qs = self.model.objects.filter(author=self.request.user).select_related()
         return qs
     
-
 class ShowTGO(DataMixin, ListView):
     template_name = 'table_tgo/data/tgo_objects.html'
     context_object_name = 'tgo_objects'
