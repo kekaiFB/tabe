@@ -14,38 +14,160 @@ from bootstrap_modal_forms.generic import (
 from django.contrib.auth.decorators import login_required
 from .templatetags.timetable_tags import timetable_history_tag
 
+from django.http import JsonResponse
+from django.template.loader import render_to_string 
+
+# ---------------------------------Расписания----------------------
+class TimetableListView(DataMixin, MyModel, ListView):
+    template_name = 'timetable/index_list.html'
+    context_object_name = 'TimetableList'
+    model = TimetableList
+
+    def get_queryset(self):
+        return super(TimetableListView, self).get_queryset().select_related()
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        title = title='Расписания'
+        c_def = self.get_user_context(title=title)
+        context = dict(list(context.items()) + list(c_def.items()))
+        return context
+
+class TimetableListCreateView(DataMixin, BSModalCreateView):
+    template_name = 'table_tgo/edit_data/create.html'
+    form_class = TimetableListModelForm
+    success_url = reverse_lazy('timetable:timetable_list')
+    
+    def form_valid(self, form):
+        self.instance = form.save(commit=False)
+        self.instance.author = self.request.user 
+        return super().form_valid(form)
+
+
+@login_required
+def load_ajax_fligh_data(request):
+    flight_type = ''
+    data = {}
+   
+    id_flight = '' if not request.GET.get('id_flight') else str(request.GET.get('id_flight'))
+    
+    if id_flight != '':
+      flight_type =  Flight.objects.filter(id=id_flight).values('type_flight')[0]
+
+    if flight_type:
+        data['flight_type'] = flight_type
+
+    return JsonResponse(data)
+
+class TimetableListUpdateView(DetailView, BSModalUpdateView):
+    model = TimetableList
+    template_name = 'table_tgo/edit_data/update.html'
+    form_class = TimetableListModelForm
+    success_url = reverse_lazy('timetable:timetable_list')
+
+
+class TimetableListDeleteView(BSModalDeleteView):
+    model = TimetableList
+    template_name = 'table_tgo/edit_data/delete.html'
+    success_url = reverse_lazy('timetable:timetable_list')
+
+
+#Копируем ТГО (Полная копия) 
+@login_required
+def copy_timetable(request, pk):
+    instance = TimetableList.objects.get(pk = pk)
+    old_timetable = Timetable.objects.filter(timetablelist = instance.pk)
+
+    instance.pk = None
+    instance.title = 'копия_' + instance.title
+    instance.author = request.user
+    instance.save()
+
+    for timetable_obj in old_timetable:
+        timetable_obj.pk = None
+        timetable_obj.author = request.user
+        timetable_obj.editor = request.user
+        timetable_obj.timetablelist = instance
+        timetable_obj.save()
+
+    return HttpResponseRedirect(reverse('timetable:timetable_list'))
+
+# -------------------------------------------------------------------
+
+
 # ---------------------------------Расписание----------------------
 class TimeTableView(DataMixin, MyModel, TemplateView):
     template_name = 'timetable/index.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        title = title='Расписание'
-        c_def = self.get_user_context(title=title)
+        c_def = self.get_user_context(title=self.kwargs['title'])
         context = dict(list(context.items()) + list(c_def.items()))
 
-        t = Timetable.objects.select_related()
+        t = Timetable.objects.filter(timetablelist = self.kwargs['id']).select_related()
         th = timetable_history_tag(t)
         context['timetable'] = zip(t, th)
+
+        context['title_timetable'] = self.kwargs['title']
+        context['timetable_id'] = self.kwargs['id']
+
+        author = None if not self.request.POST.get('author') else str(self.request.POST.get('author'))
+        if author:
+            context['author'] = author
         return context
+       
+        
+    def post(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+          
 
-class TimeTableCreateView(DataMixin, BSModalCreateView):
-    template_name = 'table_tgo/edit_data/create.html'
+class TimeTableCreateView(MySuccesURL, DataMixin, BSModalCreateView):
+    template_name = 'timetable/edit_data/createTimeTable.html'
     form_class = TimeTableModelForm
-    success_url = reverse_lazy('timetable:index')
 
-class TimeTableUpdateView(DetailView, BSModalUpdateView):
+    def get_context_data(self, **kwargs):
+        context = super(TimeTableCreateView, self).get_context_data(**kwargs)
+        context['form'] = TimeTableModelForm(
+        initial={
+        'timetablelist': self.request.resolver_match.kwargs['timetable_id'],
+        })
+        return context
+    
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        req_user = self.request.user
+        if instance.timetablelist_author == req_user: 
+            instance = form.save(commit=False)
+            instance.author = req_user
+            instance.editor = req_user
+            return super().form_valid(form)
+        else:
+            raise forms.ValidationError(u"Вы не явялетесь владельцем этой записи")  
+
+
+
+class TimeTableUpdateView(MySuccesURL, DetailView, BSModalUpdateView):
     model = Timetable
     context_object_name = 'timetable'
     template_name = 'timetable/edit_data/updateTimeTable.html'
     form_class = TimeTableModelForm
-    success_url = reverse_lazy('timetable:index')
 
+    def form_valid(self, form):
+        self.instance = form.save(commit=False)
+        if self.instance.author == self.request.user: 
+            return super().form_valid(form)
+        else:
+            raise forms.ValidationError(u"Вы не явялетесь владельцем этой записи")
 
-class TimeTableDeleteView(BSModalDeleteView):
+class TimeTableDeleteView(MySuccesURL, BSModalDeleteView):
     model = Timetable
     template_name = 'table_tgo/edit_data/delete.html'
-    success_url = reverse_lazy('timetable:index')
+
+    def form_valid(self, form):
+        self.object = self.get_object()
+        if self.object.author != self.request.user: 
+            raise forms.ValidationError(u"Вы не явялетесь владельцем этой записи")
+        else:
+            return super(TimeTableDeleteView, self).form_valid(form)
 # -------------------------------------------------------------------
 
 # ---------------------------------Авиакомпании----------------------
@@ -223,14 +345,15 @@ class FlightView(DataMixin, MyModel, ListView):
         return dict(list(context.items()) + list(c_def.items()))
     
 class FlightCreateView(DataMixin, BSModalCreateView):
-    template_name = 'table_tgo/edit_data/create.html'
+    template_name = 'timetable/edit_data/createFlight.html'
     form_class = FlightModelForm
     success_url = reverse_lazy('timetable:flight')
+    
     
 
 class FlightUpdateView(BSModalUpdateView):
     model = Flight
-    template_name = 'table_tgo/edit_data/update.html'
+    template_name = 'timetable/edit_data/updateFlight.html'
     form_class = FlightModelForm
     success_url = reverse_lazy('timetable:flight')
 
@@ -239,7 +362,7 @@ class FlightDeleteView(BSModalDeleteView):
     model = Flight
     template_name = 'table_tgo/edit_data/delete.html'
     success_url = reverse_lazy('timetable:flight')
-# -------------------------------------------------------------------
+
 
 
 # ---------------------------------Типы рейсов----------------------

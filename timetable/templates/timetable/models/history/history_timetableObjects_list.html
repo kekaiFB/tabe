@@ -1,12 +1,12 @@
 {% extends "timetable/base.html" %}
 {% load tgo_tags %}
+{% load timetable_tags %}
 
 {% block content %}
    {% include 'table/navbar.html' %}
 
    <span class="h3">Контроль версий </span>
    <div class="mt-2">
-      <a class="btn btn-outline-primary" href="{% url 'timetable:index' %}">Назад</a>
       <span id="timetable_history_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
    </div>
    <hr>
@@ -36,7 +36,8 @@
             
             {% for t in timetable %} 
                 {% if forloop.counter == 1 %}
-                    <tr class='h6'>
+                    <tr style="background-color: {% background t.timetablestatusight %}; color: {% color t.timetablestatusight %}">
+                        
                         <td class="text-primary">{{ t.history_date }}</td>
                         <td>{{ t.airline }}</td>
                         <td>{{ t.flight }}</td>
@@ -56,7 +57,7 @@
                         <td></td>
                     </tr>  
                 {% else %}
-                    <tr>
+                    <tr style="background-color: {% background t.timetablestatusight %}; color: {% color t.timetablestatusight %}">
                         <td class="text-primary">{{ t.history_date }}</td>
                         <td>{{ t.airline }}</td>
                         <td>{{ t.flight }}</td>

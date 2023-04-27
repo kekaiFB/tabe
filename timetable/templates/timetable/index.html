@@ -4,23 +4,31 @@
 {% block content %}
     
     {% include 'table/navbar.html' %}
+    
     <h4 class="ml-2">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{title}}
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" href="{% url 'timetable:airlines' %}">Авиакомпании</a>
-              <a class="dropdown-item" href="{% url 'timetable:airplane' %}">Воздушные судна</a>
-              <a class="dropdown-item" href="{% url 'timetable:country' %}">Страны</a>
-              <a class="dropdown-item" href="{% url 'timetable:city' %}">Города</a>
-              <a class="dropdown-item" href="{% url 'timetable:airport' %}">Аэропорты</a>
-              <a class="dropdown-item" href="{% url 'timetable:flight' %}">Рейсы</a>
+            <span class="h4">{{title_timetable}}</span>
+            <br>
+            <div class="mt-2">
+                <a class="btn btn-outline-primary" href="{% url 'timetable:timetable_list' %}">Назад</a>
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Справочники
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="{% url 'timetable:airlines' %}">Авиакомпании</a>
+                    <a class="dropdown-item" href="{% url 'timetable:airplane' %}">Воздушные судна</a>
+                    <a class="dropdown-item" href="{% url 'timetable:country' %}">Страны</a>
+                    <a class="dropdown-item" href="{% url 'timetable:city' %}">Города</a>
+                    <a class="dropdown-item" href="{% url 'timetable:airport' %}">Аэропорты</a>
+                    <a class="dropdown-item" href="{% url 'timetable:flight' %}">Рейсы</a>
+                    <hr>
+                    <a class="dropdown-item" href="{% url 'timetable:timetableStatus' %}">Статусы Рейсов</a>
+                </div>
+               
+                <a class="btn btn-outline-primary  modalButton" data-form-url="{% url 'timetable:add_timetable' timetable_id %}">Добавить</a>
+                <span id="timetable-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
             </div>
-            <a class="btn btn-outline-warning" href="{% url 'timetable:timetableStatus' %}">Статусы</a>
-            {% add_button_text 'timetable:add_timetable' %}
-            <span id="timetable-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
           <hr>
-    </h4>
+    </h4> 
 
     <table id="timetable" class="table table-striped" style="width:100%">
         <thead> 

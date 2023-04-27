@@ -9,10 +9,12 @@ class DataMixin(LoginRequiredMixin):
     def get_user_context(self, **kwargs):
         context = kwargs
         return context
-    
+
 class MySuccesURL(LoginRequiredMixin):
     def get_success_url(self):
-        return reverse_lazy('timetable:index')
+        id = self.object.timetablelist.id
+        title = self.object.timetablelist.title
+        return reverse_lazy('timetable:index', kwargs={'id': id, 'title': title})
 
 
 menu = [{'title': "Авиакомпании", 'url_name': 'timetable:airlines'},

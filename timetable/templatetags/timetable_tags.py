@@ -74,7 +74,7 @@ def background(timetablestatusight):
     elif timetablestatusight == 'На согласовании':
         style = "#fbff0d"
     elif timetablestatusight == 'Тестирование':
-        style = "#8cc8ff"
+        style = "#bae8e8"
     elif timetablestatusight == 'Отменен':
         pass
     elif timetablestatusight == 'Отказано':

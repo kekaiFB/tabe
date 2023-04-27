@@ -4,8 +4,14 @@ from .views import *
 app_name = 'timetable'
 
 urlpatterns = [
-    path('timetable', TimeTableView.as_view(), name='index'),
-    path('add_timetable/', TimeTableCreateView.as_view(), name='add_timetable'),
+    path('', TimetableListView.as_view(), name='timetable_list'),
+    path('add_timetable_list/', TimetableListCreateView.as_view(), name='add_timetable_list'),
+    path('edit_timetable_list/<int:pk>', TimetableListUpdateView.as_view(), name='edit_timetable_list'),
+    path('delete_timetable_list/<int:pk>/',TimetableListDeleteView.as_view(), name='delete_timetable_list'),
+    path('copy_timetable/<int:pk>', copy_timetable, name='copy_timetable'),
+
+    path("timetable/<str:title>/<int:id>/", TimeTableView.as_view(), name='index'),
+    path('add_timetable/<int:timetable_id>/', TimeTableCreateView.as_view(), name='add_timetable'),
     path('edit_timetable/<int:pk>', TimeTableUpdateView.as_view(), name='edit_timetable'),
     path('delete_timetable/<int:pk>/', TimeTableDeleteView.as_view(), name='delete_timetable'),
     
@@ -62,10 +68,9 @@ urlpatterns = [
     path('historyTimetable/<int:id>', HistoryTimetableView.as_view(), name='historyTimetable'),
     path('editHistoryObject/<int:pk>/<int:history_id>/', editHistoryObject, name='editHistoryObject'),
     path('delete_historyTimetable/<int:pk>/<int:history_id>/', HistoryTimetableDeleteView.as_view(), name='delete_historyTimetable'),
-
-
 ]
 
-# urlpatterns += [
-#     path('ajax_update_tgo', update_tgo, name='ajax_update_tgo'), 
-# ]
+
+urlpatterns += [
+    path('ajax_load_flight', load_ajax_fligh_data, name='ajax_load_flight'), 
+]

@@ -20,6 +20,10 @@
 
       {% block content %}{% endblock %} 
 
+      <!-- momentJS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+      <!-- momentJS END -->
+      
       
       <!-- javascript -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -48,6 +52,7 @@
       <script src="{% static 'js/type_flight_dt.js' %}"></script>
       <script src="{% static 'js/timetableStatus_dt.js' %}"></script>
       <script src="{% static 'js/timetable_history_dt.js' %}"></script>
+      <script src="{% static 'js/timetable_list_dt.js' %}"></script>
       
       <!-- ModalForm -->
       {% include 'table_tgo/data/modal.html' %}

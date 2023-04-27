@@ -10,7 +10,7 @@
             {% if request.resolver_match.app_name == 'timetable' %}
                 <span class="navbar-brand font-weight-bold">Расписание</span>
             {% else %}
-            <a class="navbar-brand" href="{% url 'timetable:index' %}">Расписание</a>
+            <a class="navbar-brand" href="{% url 'timetable:timetable_list' %}">Расписание</a>
             {% endif %}
 
             {% if request.resolver_match.app_name == 'table_tgo' %}

@@ -22,7 +22,7 @@ from django.contrib.auth.tokens import default_token_generator
 
 def registerUserForm(request):
     if request.user.is_authenticated:
-            return redirect('timetable:index')
+            return redirect('timetable:timetable_list')
     if request.method == 'POST':
         form = RegisterUserForm(request.POST)
         if form.is_valid():
@@ -52,7 +52,7 @@ class LoginUser(LoginView):
     form_class = LoginForm
     template_name = 'user/login.html'
     success_message = 'Успешный вход в учетную запись!'
-    extra_context = dict(success_url=reverse_lazy('timetable:index'))
+    extra_context = dict(success_url=reverse_lazy('timetable:timetable_list'))
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -61,7 +61,7 @@ class LoginUser(LoginView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('timetable:index')
+            return redirect('timetable:timetable_list')
         return super(LoginUser, self).dispatch(request, *args, **kwargs)
 
 

@@ -1,27 +1,30 @@
-{% load widget_tweaks %}
+{% load crispy_forms_tags %}
 
 
 <form method="post" action="">
   {% csrf_token %}
+  {{ form.media.js }}
   <div class="modal-header">
-    <h3 class="modal-title">Обновить расписание</h3>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-
     <div class="row">
-      <div class="col-6">
+      <div class="col-8">
         <h4 class="modal-title">Количество версий: {{ timetable.history.count }}</h4>
       </div>
-      <div class="col">
+      <div class="col-2">
         <a class="btn btn-outline-primary versionControlButton"
         target="_blank"  
         href="{% url 'timetable:historyTimetable' timetable.id %}">Контроль версий</a>
       </div>
     </div>  
-    <hr>
+    <div class="col">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    
+  </div>
+  <div class="modal-body">
+
     <div class="row">
       <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
           {% for error in form.non_field_errors %}
@@ -29,26 +32,132 @@
           {% endfor %}
         </div>
 
-        {% for field in form %}
-        {% if not field.is_hidden %}
-          <div class="form-group">
-            <label class="ml-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {% render_field field class="form-control" %}
-            <div class="{% if field.errors %} invalid{% endif %}">
-              {% for error in field.errors %}
-                <p class="help-block">{{ error }}</p>
-              {% endfor %}
-            </div>
+        <div class="form-row">
+          <div class="form-group col-md-6 mb-0">
+              {{ form.timetablelist|as_crispy_field }}
           </div>
-        {% else %}
-        {{ field }}
-        {% endif %}
-      {% endfor %}
+      </div>
+      <div class="form-row">
+          <div class="form-group col-md-6 mb-0">
+              {{ form.airline|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-6 mb-0">
+              {{ form.flight|as_crispy_field }}
+          </div>
+      </div>
+      <div class="form-row">
+          <div class="form-group col-md-3 mb-0">
+            {{ form.arrival_time|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-3 mb-0">
+            {{ form.departure_time|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-4 mt-5">
+            {{ form.next_day_status|as_crispy_field }}
+          </div>
+      </div>
+      <div class="form-row">
+          <div class="form-group col-md-3 mb-0">
+              {{ form.start_register_time|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-3 mb-0">
+            {{ form.end_register_time|as_crispy_field }}
+          </div>
+      </div>
+      <div class="form-row">
+          <div class="form-group col-md-6 mb-0">
+              {{ form.date_start|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-6 mb-0">
+            {{ form.date_end|as_crispy_field }}
+          </div>
+      </div>
+      <div class="form-row">
+          <div class="form-group col-md-12 mb-0">
+              {{ form.tgo|as_crispy_field }}
+            </div>
+      </div>
+      <div class="form-row">
+          <div class="form-group col-md-12 mb-0">
+              {{ form.timetablestatusight|as_crispy_field }}
+            </div>
+      </div>
+      <div class="form-row">
+          <div class="form-group col-md-12 mb-0">
+              {{ form.comment|as_crispy_field }}
+            </div>
+      </div>
+      <div class="form-row">
+          <div class="form-group col-md-3 mb-0">
+              {{ form.monday|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-3 mb-0">
+              {{ form.tuesday|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-3 mb-0">
+              {{ form.wednesday|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-3 mb-0">
+              {{ form.thursday|as_crispy_field }}
+          </div>
+      </div>
+      <div class="form-row">
+          <div class="form-group col-md-3 mb-0">
+              {{ form.friday|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-3 mb-0">
+              {{ form.saturday|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-3 mb-0">
+              {{ form.sunday|as_crispy_field }}
+          </div>
+      </div>
     </div>
   </div> 
 
   <div class="modal-footer">
     <button type="submit" class="btn btn-primary">Обновить</button>
+    
   </div>
 
 </form>
+
+
+<script>
+  var flight_type = '';
+  $('#id_flight').change(function () {
+    var id_flight = $(this).val()
+    
+    $.ajax({                      
+      url: "{% url 'timetable:ajax_load_flight' %}",                 
+      data: {
+        'id_flight': $("#id_flight").val(),  
+      },
+      success: function (data) {  
+        flight_type = data.flight_type.type_flight;
+      }
+    });
+  });
+
+  $('#id_departure_time').change(function () {
+    var departure_time = $('#id_departure_time').val()
+    var date = moment(departure_time, 'HH:mm')
+
+    if (flight_type == 'Международный') {
+        var date_start_register = date.subtract(3, 'hours');
+        $("#id_start_register_time").val(date_start_register.format('HH:mm')) 
+
+        var date_end_register = date.add(3, 'hours');
+        date_end_register = date_end_register.subtract(40, 'minutes').format('HH:mm')
+        $("#id_end_register_time").val(date_end_register) 
+    } 
+    else if (flight_type == 'Внутренний') {
+      var date_start_register = date.subtract(2, 'hours');
+      $("#id_start_register_time").val(date_start_register.format('HH:mm')) 
+
+      var date_end_register = date.add(2, 'hours');
+      date_end_register = date_end_register.subtract(40, 'minutes').format('HH:mm')
+      $("#id_end_register_time").val(date_end_register) 
+    }
+  });
+</script>

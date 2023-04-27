@@ -1,0 +1,70 @@
+{% extends "timetable/base.html" %}
+{% load tgo_tags %}
+{% load timetable_tags %}
+{% block content %}
+
+    {% include 'table/navbar.html' %}
+ 
+
+    {% add_button_text 'timetable:add_timetable_list' %}
+
+        
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Справочники
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="{% url 'timetable:airlines' %}">Авиакомпании</a>
+        <a class="dropdown-item" href="{% url 'timetable:airplane' %}">Воздушные судна</a>
+        <a class="dropdown-item" href="{% url 'timetable:country' %}">Страны</a>
+        <a class="dropdown-item" href="{% url 'timetable:city' %}">Города</a>
+        <a class="dropdown-item" href="{% url 'timetable:airport' %}">Аэропорты</a>
+        <a class="dropdown-item" href="{% url 'timetable:flight' %}">Рейсы</a>
+        <hr>
+        <a class="dropdown-item" href="{% url 'timetable:timetableStatus' %}">Статусы Рейсов</a>
+    </div>
+   
+    <span id="timetable_list_dt-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>  
+    <table id="timetable_list_dt" class="table table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>Автор</th>
+                <th>Плановое расписание</th>
+                <th>Дата создания</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in TimetableList %}  
+                <tr>
+                    <td>{{t.author}}</td>
+                    <td>{{t.title}}</td>
+                    <td>{{t.time_create|date:"d-m-Y"}}</td>
+                    <td>
+                        <form method='post' action="{{ t.get_absolute_url }}">
+                            {% csrf_token %}
+                            <input type="hidden"  name="author" value={{ t.author }}> 
+                            <button href="#" type="submit" class="btn btn-outline-primary">Подробнее...</button>
+                        </form>   
+                    </td>
+                    <td>
+                        {% copy_button 'timetable:copy_timetable' t.id "Копия" "Создать копию расписания?" %}
+                    </td>
+                    {% if request.user == t.author %}
+                        <td>
+                            {% edit_button 'timetable:edit_timetable_list' t.id %}
+                        </td>
+                        <td>
+                            {% del_button 'timetable:delete_timetable_list' t.id %}
+                        </td>
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                    {% endif %}
+                </tr>     
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

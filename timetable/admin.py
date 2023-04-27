@@ -1,16 +1,5 @@
 from django.contrib import admin
-from .models import (Airlines
-                     , Airplane
-                     , EquipmentAirplane
-                     , TypeCountry
-                     , Country
-                     , City
-                     , Airport
-                     , TypeFlight
-                     , Flight
-                     , Timetable
-                     , TimetableStatus
-                     )
+from .models import *
 
 
 # ----------------------АВИАКОМПАНИИ---------------------------------------------------------
@@ -107,5 +96,6 @@ class FlightAdmin(admin.ModelAdmin):
     # def typeCountry(self, obj):
     #     return obj.arrival.country.type
 
-admin.site.register(Timetable)
+# admin.site.register(TimetableList)
+# admin.site.register(Timetable)
 admin.site.register(TimetableStatus)
