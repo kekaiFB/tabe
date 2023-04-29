@@ -4,4 +4,4 @@ from django.apps import AppConfig
 class TableConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "table"
-    verbose_name = "График пропусков"
+    verbose_name = "1 Абсентеизм"

@@ -2,10 +2,13 @@ $(document).ready(function () {
 
 
     // timetable
-    $('#timetable thead tr')
+    $('#timetable thead tr.forFilter')
     .clone(true)
     .addClass('filters_timetable')
-    .appendTo('#timetable thead');
+    .appendTo('#timetable thead')
+    .removeAttr('style');
+
+    
 
     var timetable = $('#timetable').DataTable({
         "dom": 'ftipr',

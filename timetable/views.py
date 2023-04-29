@@ -135,7 +135,7 @@ class TimeTableCreateView(MySuccesURL, DataMixin, BSModalCreateView):
     def form_valid(self, form):
         instance = form.save(commit=False)
         req_user = self.request.user
-        if instance.timetablelist_author == req_user: 
+        if str(instance.timetablelist.author) == str(req_user): 
             instance = form.save(commit=False)
             instance.author = req_user
             instance.editor = req_user
@@ -153,7 +153,7 @@ class TimeTableUpdateView(MySuccesURL, DetailView, BSModalUpdateView):
 
     def form_valid(self, form):
         self.instance = form.save(commit=False)
-        if self.instance.author == self.request.user: 
+        if str(self.instance.author) == str(self.request.user): 
             return super().form_valid(form)
         else:
             raise forms.ValidationError(u"Вы не явялетесь владельцем этой записи")
@@ -164,7 +164,7 @@ class TimeTableDeleteView(MySuccesURL, BSModalDeleteView):
 
     def form_valid(self, form):
         self.object = self.get_object()
-        if self.object.author != self.request.user: 
+        if str(self.object.author) != str(self.request.user): 
             raise forms.ValidationError(u"Вы не явялетесь владельцем этой записи")
         else:
             return super(TimeTableDeleteView, self).form_valid(form)
@@ -509,21 +509,33 @@ class HistoryTimetableView(DataMixin, MyModel, ListView):
         return context
     
     def get_queryset(self):
-        return super(HistoryTimetableView, self).get_queryset().get(id = self.kwargs['id']).history.select_related('flight', 'airline', 'timetablestatusight').order_by('-history_date')
+        return super(HistoryTimetableView, self).get_queryset().get(id = self.kwargs['id']).history.select_related('flight', 'airline', 'timetablestatusight', 'tgo', 'author').order_by('-history_date')
 
 
 @login_required
-def editHistoryObject(self, pk,  history_id):
-    elem = Timetable.objects.filter(id = pk)[0].history.select_related('flight', 'airline', 'timetablestatusight')
-    elem.filter(history_id = history_id)[0].instance.save()
-    elem.filter(history_id = history_id).delete()
+def editHistoryObject(request, pk,  history_id):  
+    if request.method == 'POST':
+        author = None if not request.POST.get('author') else str(request.POST.get('author'))
+        req_user = request.user
+        if str(author) == str(req_user): 
+            elem = Timetable.objects.filter(id = pk)[0].history.select_related('flight', 'airline', 'timetablestatusight', 'tgo', 'author')
+            elem.filter(history_id = history_id)[0].instance.save()
+            elem.filter(history_id = history_id).delete()
 
-    return HttpResponseRedirect(reverse(
+            return HttpResponseRedirect(reverse(
             'timetable:historyTimetable',
-            kwargs={
-                'id': pk
-            }
-        ))
+                kwargs={
+                    'id': pk
+                }
+            ))
+        else:
+            print(forms.ValidationError(u"Вы не явялетесь владельцем этой записи"))
+            return HttpResponseRedirect(reverse(
+            'timetable:historyTimetable',
+                kwargs={
+                    'id': pk
+                }
+            ))
 
 
 class HistoryTimetableDeleteView(BSModalDeleteView):
@@ -531,10 +543,23 @@ class HistoryTimetableDeleteView(BSModalDeleteView):
     template_name = 'table_tgo/edit_data/delete.html'
 
     def form_valid(self, form):
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-        self.object.history.filter(history_id = self.kwargs['history_id']).delete()
-        return HttpResponseRedirect(success_url)
+        author = None if not self.request.POST.get('author') else str(self.request.POST.get('author'))
+        req_user = self.request.user
+
+        if str(author) == str(req_user):
+            self.instance = form.save(commit=False)
+            self.object = self.get_object()
+            success_url = self.get_success_url()
+            self.object.history.filter(history_id = self.kwargs['history_id']).delete()
+            return HttpResponseRedirect(success_url)
+        else:
+            print(forms.ValidationError(u"Вы не явялетесь владельцем этой записи"))
+            return HttpResponseRedirect(reverse(
+            'timetable:historyTimetable',
+                kwargs={
+                    'id': self.kwargs['pk']
+                }
+            ))
     
     def get_success_url(self):
         return reverse(

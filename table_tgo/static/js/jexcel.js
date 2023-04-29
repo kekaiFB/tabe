@@ -18,9 +18,10 @@ $(document).ready(function () {
     var value = []
     var new_cellName = '';
     var time_start_cellName_arr = [];
-
+    var endRow = -1;
     var rowOp = []
-
+    var valueEndRow = 0
+    var id_valueEndRow = 0
     var loaded = function(instance) {
         updateMyTable()
     }
@@ -146,6 +147,23 @@ $(document).ready(function () {
                 }
             }
     
+            //Окончание ТГО
+            if (col == 1) {
+                if( cell.innerText.search("Окончание") == 0)
+                {
+                endRow = row
+                }
+            }
+            
+            if (row == endRow) {
+                if (col == 4) {
+                    valueEndRow = label
+                }
+                if (col == 8) {
+                    id_valueEndRow = label
+                }
+            }
+
             //выделяем подразделения для операций особым цветом
             if (rowOp.indexOf(row) != -1) {
                 if (col == 7) {
@@ -271,39 +289,42 @@ $(document).ready(function () {
         if ($(".requestUser").val() == $( "input[name='author']" ).val())
         {
             var tgo_ogject_update = []; 
-        var update_tgoObj_arr = [];
-        var update_res_arr = [];
-        var res = [];
+            var update_tgoObj_arr = [];
+            var update_res_arr = [];
+            var res = [];
+            var end = '';
+            
+            for (let i = 0; i < length; i++) { 
+                res = myTable.getRowData([i]);
+                tgo_ogject_update.push([res[8], res[9], res[10], res[4], res[5], res[6]])
+            }
+            for (let i = 0; i < length; i++) { 
+                //получаем массив tgo_obj которые надо обновить
+                if (tgo_ogject_update[i][1] == "table_tgo_tgo_object"){
+                    update_tgoObj_arr.push( tgo_ogject_update[i] )
+                }
         
-        for (let i = 0; i < length; i++) { 
-            res = myTable.getRowData([i]);
-            tgo_ogject_update.push([res[8], res[9], res[10], res[4], res[5], res[6]])
-        }
-        for (let i = 0; i < length; i++) { 
-            //получаем массив tgo_obj которые надо обновить
-            if (tgo_ogject_update[i][1] == "table_tgo_tgo_object"){
-                update_tgoObj_arr.push( tgo_ogject_update[i] )
+                //получаем массив res_obj которые надо обновить
+                if (tgo_ogject_update[i][1] == "table_tgo_ressourceoperation"){
+                    update_res_arr.push( tgo_ogject_update[i] )
+                }
             }
-    
-            //получаем массив res_obj которые надо обновить
-            if (tgo_ogject_update[i][1] == "table_tgo_ressourceoperation"){
-                update_res_arr.push( tgo_ogject_update[i] )
-            }
-        }
-    
-        $.ajax({             
-            url: '/table_tgo/ajax_update_tgo',
-            method : "post",
-            dataType : "json",
-            data: {
-                'update_tgoObj_arr': update_tgoObj_arr, 
-                'update_res_arr': update_res_arr,  
-              },                
-    
-            success: function () {  
-                console.log('success!')
-            }
-          });
+
+            $.ajax({             
+                url: '/table_tgo/ajax_update_tgo',
+                method : "post",
+                dataType : "json",
+                data: {
+                    'valueEndRow': [id_valueEndRow, 'valueEndRow', valueEndRow],
+                    'update_tgoObj_arr': update_tgoObj_arr, 
+                    'update_res_arr': update_res_arr,  
+                },                
+        
+                success: function () {  
+                    console.log('success!')
+                    location.reload()
+                }
+            });
         }
     }
     

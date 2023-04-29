@@ -96,6 +96,6 @@ class FlightAdmin(admin.ModelAdmin):
     # def typeCountry(self, obj):
     #     return obj.arrival.country.type
 
-# admin.site.register(TimetableList)
-# admin.site.register(Timetable)
+admin.site.register(TimetableList)
+admin.site.register(Timetable)
 admin.site.register(TimetableStatus)

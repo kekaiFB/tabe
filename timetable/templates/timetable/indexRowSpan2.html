@@ -30,56 +30,56 @@
           <hr>
     </h4> 
 
-    <table id="timetable" class="table table-bordered table-hover table-condensed"  cellspacing="0"  style="width:100%">
+    <table id="timetable" class="table table-striped" style="width:100%">
         <thead> 
             <tr>
-                <th colspan="5" class="h5" style="text-align: center;">Рейс</th>
-                <th colspan="6" class="h5" style="text-align: center;">Время</th>
-                <th colspan="3" class="h5" style="text-align: center;">Период</th>
+                <th rowspan="2">Аваиакомпания</th>
+                <th rowspan="2">Рейс</th>
+                <th rowspan="2">Тип</th>
+                <th rowspan="2">Путь</th>
+                <th rowspan="2">Базовый аэропорт</th>
 
-                <th rowspan="2" class="h5">ТГО (мин.)</th>
-                <th rowspan="2" class="h5">Статус</th>
-                <th rowspan="2" class="h5">Комментарий</th>
+                <th colspan="2">ВС</th>
+
+                <th rowspan="2">Прилет</th>
+                <th rowspan="2">Начало Регистрации</th>
+                <th rowspan="2">Конец Регистрации</th>
+                <th rowspan="2">Вылет</th>
+                <th rowspan="2">Следующий день</th>
+                <th rowspan="2">Начало действия</th>
+                <th rowspan="2">Конец действия</th>
+                <th rowspan="2">Длительность</th>
+                
+                <th rowspan="2">ТГО</th>
+                <th rowspan="2">Статус</th>
+                <th rowspan="2">Комментарий</th>
                 <th rowspan="2"></th>
                 <th rowspan="2"></th>
             </tr>
             <tr>
-                <th>Аваиакомпания</th>
-                <th>Рейс</th>
-                <th>Тип</th>
-                <th>Путь</th>
-                <th>Базовый аэропорт</th>
-                
-                <th>Прилет</th>
-                <th>Начало Регистрации</th>
-                <th>Конец Регистрации</th>
-                <th>Вылет</th>
-                <th>Стоянка</th>
-                <th>Следующий день</th>
-
-                <th>С</th>
-                <th>По</th>
-                <th>Период (дни)</th>
+                <th>Тип ВС</th>
+                <th>Комплектация</th>
             </tr>
-
             <tr style="display: none;" class="forFilter">
                 <th>Аваиакомпания</th>
                 <th>Рейс</th>
                 <th>Тип</th>
                 <th>Путь</th>
                 <th>Базовый аэропорт</th>
+
+                
+                <th>Тип ВС</th>
+                <th>Комплектация</th>
                 
                 <th>Прилет</th>
                 <th>Начало Регистрации</th>
                 <th>Конец Регистрации</th>
                 <th>Вылет</th>
-                <th>Стоянка</th>
                 <th>Следующий день</th>
 
-                <th>С</th>
-                <th>По</th>
-                <th>Период</th>
-                
+                <th>Начало действия</th>
+                <th>Конец действия</th>
+                <th>Длительность</th>
 
                 <th>ТГО</th>
                 <th>Статус</th>
@@ -93,23 +93,22 @@
             <tr style="background-color: {% background t.timetablestatusight %}; color: {% color t.timetablestatusight %}">
                 {% classTimetable t.airline 'airline' th %}
                 {% classTimetable t.flight 'flight' th %}
-
-                {% classTimetable t.flight.type_flight 'flight' th %}
-                {% classTimetable t.flight.get_path_flight 'flight' th %}
-
+                {% classTimetable t.flight.type_flight 'type_flight' th %}
+                {% classTimetable t.flight.get_path_flight '' th %}
                 {% classTimetable t.flight.departurelAirport 'departurelAirport' th %}
+                
+                {% classTimetable t.flight.airplane 'airplane' th %}
+                {% classTimetable t.flight.equipmentAirplane 'equipmentAirplane' th %}
 
                 {% classTimetable t.arrival_time 'arrival_time' th %}
                 {% classTimetable t.start_register_time 'start_register_time' th %}
                 {% classTimetable t.end_register_time 'end_register_time' th %}
                 {% classTimetable t.departure_time 'departure_time' th %}
-                {% classTimetable t.parking 'departure_time' th %}
-
-                {% class_next_day_status t.next_day_status 'next_day_status' th %}
+                {% classTimetable t.next_day_status 'next_day_status' th %}
 
                 {% classTimetable t.date_start 'date_start' th %}
                 {% classTimetable t.date_end 'date_end' th %}
-                {% classTimetable t.date_lenght 'date_end' th %}
+                {% classTimetable t.date_end 'date_end' th %}
 
                 {% classTimetable t.tgo.tgo_length 'tgo' th %}
                 {% classTimetable t.timetablestatusight 'timetablestatusight' th %}

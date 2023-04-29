@@ -131,7 +131,7 @@ def get_snf():
 @login_required
 def index(request):  
     snj = get_snf()
-    return render(request, "table/index.html", {'snj': snj})  
+    return render(request, "table/index.html", {'snj': snj, 'title': 'Абсентеизм'})  
 
 
 @login_required

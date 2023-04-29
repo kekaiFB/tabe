@@ -103,3 +103,38 @@ def color(timetablestatusight):
         pass
     
     return color
+
+
+@register.inclusion_tag('timetable/my_tags/checkedBolean.html')
+def next_day_status(next_day_status=True):
+    return {'next_day_status': next_day_status}
+
+
+@register.inclusion_tag('timetable/my_tags/class_next_day_status.html')
+def class_next_day_status(t_value=0, t_label='', th = []):
+    style = ''
+    clas = []
+    th_date = th[0]
+    th_date = datetime(th_date.year, th_date.month, th_date.day, th_date.hour, th_date.minute, th_date.second,  th_date.microsecond)   
+    difference_minutes = (datetime.now()-th_date).total_seconds() / (60*60)
+    if t_label in th:
+        if difference_minutes < 10:
+            clas = ["fw-bold", "text-white"]
+            style = "#f00"
+        elif difference_minutes < 30:
+            clas = ["fw-bold", "text-white"]
+            style = "#ff4f4f"
+        elif difference_minutes < 60: 
+            style = "#fc7979"
+        elif difference_minutes < 240: 
+            style = "#ffa1a1"
+        elif difference_minutes < 480: 
+            style = "#ffd1d1"
+        elif difference_minutes < 1440: 
+            style = "#f1f2a7"
+        elif difference_minutes < 2880: 
+            style = "#feffcc"
+        elif difference_minutes < 10080: 
+            style = "#f9fae1"
+    return { 't_value': t_value,  't_label': t_label, 'style': style, 'clas': clas}
+

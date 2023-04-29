@@ -1,14 +1,21 @@
 from django.db import models
-from datetime import timedelta
+from datetime import datetime, timedelta
+
 
 from django.urls import reverse
 from django.contrib.auth.models import User
 
 from smart_selects.db_fields import ChainedForeignKey
 from simple_history.models import HistoricalRecords
+from table_tgo.models import TGO
 
+import locale
+locale.setlocale(
+    category=locale.LC_ALL,
+    locale="Russian"  # Note: do not use "de_DE" as it doesn't work
+)
 
-# ----------------------АВИАКОМПАНИИ---------------------------------------------------------
+#------------------АВИАКОМПАНИИ---------------------------------------------------------
 class Airlines(models.Model):  
     title = models.CharField(max_length=150, verbose_name="Название")
     character_code = models.CharField(max_length=10, verbose_name="Код", default='', blank=True) 
@@ -40,7 +47,7 @@ class EquipmentAirplane(models.Model):
 
     class Meta:
         verbose_name = 'Комплектация воздушного судна'
-        verbose_name_plural = '3 Комплектация ВС' 
+        verbose_name_plural = '2.1 Комплектация ВС' 
 
     def __str__(self):
         return self.equipment
@@ -54,7 +61,7 @@ class TypeCountry(models.Model):
 
     class Meta:
         verbose_name = 'Тип страны'
-        verbose_name_plural = '4 Типы стран' 
+        verbose_name_plural = '3 Типы стран' 
 
     def __str__(self):
         return self.title
@@ -66,7 +73,7 @@ class Country(models.Model):
 
     class Meta:
         verbose_name = 'Страна'
-        verbose_name_plural = '5 Страны' 
+        verbose_name_plural = '3.1 Страны' 
 
     def __str__(self):
         return self.title
@@ -78,7 +85,7 @@ class City(models.Model):
 
     class Meta:
         verbose_name = 'Город'
-        verbose_name_plural = '6 Города' 
+        verbose_name_plural = '3.2 Города' 
 
     def __str__(self):
         return self.title
@@ -90,7 +97,7 @@ class Airport(models.Model):
 
     class Meta:
         verbose_name = 'Аэропорт'
-        verbose_name_plural = '7 Аэропорты' 
+        verbose_name_plural = '3.3 Аэропорты' 
 
     def __str__(self):
         return self.title
@@ -104,7 +111,7 @@ class TypeFlight(models.Model):
 
     class Meta:
         verbose_name = 'Тип рейса'
-        verbose_name_plural = '8 Типы рейсов' 
+        verbose_name_plural = '4 Типы рейсов' 
 
     def __str__(self):
         return self.title
@@ -138,10 +145,13 @@ class Flight(models.Model):
 
     class Meta:
         verbose_name = 'Рейс'
-        verbose_name_plural = '9 Рейсы' 
+        verbose_name_plural = '4.1 Рейсы' 
 
     def __str__(self):
         return self.title 
+    
+    def get_path_flight(self):
+        return str(self.departure) + ' - ' + str(self.arrival) 
 # -------------------------------------------------------------------------------
 # 
 # 
@@ -152,7 +162,7 @@ class TimetableStatus(models.Model):
 
     class Meta:
         verbose_name = 'Статус расписания'
-        verbose_name_plural = '10 Статусы расписания' 
+        verbose_name_plural = '5 Статусы расписания' 
 
     def __str__(self):
         return self.title
@@ -165,7 +175,7 @@ class TimetableList(models.Model):
 
     class Meta:
         verbose_name = 'Плановое расписание'
-        verbose_name_plural = 'Плановые расписания'
+        verbose_name_plural = '5.1 Плановые расписания'
         ordering = ['id']
 
 
@@ -200,7 +210,8 @@ class Timetable(models.Model):
     date_start = models.DateField(blank=True, null=True, verbose_name="Начало действия") 
     date_end = models.DateField(blank=True, null=True, verbose_name="Конец действия") 
     
-    tgo = models.CharField(max_length=150, verbose_name="ТГО")
+    tgo = models.ForeignKey(TGO, on_delete=models.CASCADE, verbose_name="ТГО")  
+
     timetablestatusight = models.ForeignKey(TimetableStatus, on_delete=models.CASCADE, verbose_name="Статус")
     comment = models.CharField(max_length=300, blank=True, null=True, default='', verbose_name="Комментарий")
 
@@ -216,7 +227,7 @@ class Timetable(models.Model):
 
     class Meta:
         verbose_name = 'Расписание'
-        verbose_name_plural = '11 Расписание' 
+        verbose_name_plural = '5.2 Расписание' 
 
     def __str__(self):
         return str(self.flight)
@@ -228,3 +239,29 @@ class Timetable(models.Model):
         finally:
             del self.skip_history_when_saving
         return ret
+    
+    def date_lenght(self):
+        return (self.date_end - self.date_start).days
+    
+    def parking(self):
+       
+        dt = str(self.departure_time.strftime('%H:%M'))
+        at = str(self.arrival_time.strftime('%H:%M'))
+        dt = datetime.strptime(dt, "%H:%M")  
+        at = datetime.strptime(at, "%H:%M")
+       
+        if self.next_day_status:
+            res = (timedelta(days=1) + dt) -at 
+            if len(str(res)) == 14:
+                seconds = res.total_seconds()
+                hours = seconds // 3600
+                minutes = (seconds % 3600) // 60
+                if len(str(minutes)) > 3:
+                    return str(hours)[:2] + ':' + str(minutes)[:-2]
+                else:
+                    return str(hours)[:2] + ':0' + str(minutes)[:-2]
+            else:
+                return str(res)[:-3]
+        else:
+            return str(dt - at)[:-3]
+            

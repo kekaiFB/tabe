@@ -1,5 +1,7 @@
 {% extends "table/base.html" %}
-  
+{% block title %}
+    {{ title }}
+{% endblock %}
 {% block content %}
     {% include 'table/navbar.html' %}
     {% include 'table/parameters.html' %}

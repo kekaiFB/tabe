@@ -253,12 +253,15 @@ def update_tgo(request):
     data = dict()
     update_tgoObj_arr = []
     update_res_arr = [] 
+    valueEndRow = []
     
     for i,j in request.POST.items():
-            if request.POST.getlist(i)[1] == 'table_tgo_tgo_object':
-                update_tgoObj_arr.append(request.POST.getlist(i))
-            if request.POST.getlist(i)[1] == 'table_tgo_ressourceoperation':
-                update_res_arr.append(request.POST.getlist(i))
+        if request.POST.getlist(i)[1] == 'table_tgo_tgo_object':
+            update_tgoObj_arr.append(request.POST.getlist(i))
+        if request.POST.getlist(i)[1] == 'table_tgo_ressourceoperation':
+            update_res_arr.append(request.POST.getlist(i))
+        if request.POST.getlist(i)[1] == 'valueEndRow':
+            valueEndRow.append(request.POST.getlist(i))
 
     #получаем списки с id и значениями которые нужно обновить для двух таблиц
     author = update_res_arr[0][2]
@@ -274,6 +277,9 @@ def update_tgo(request):
                 
             for elem in update_res_arr:
                 RessourceOperation.objects.filter(id=elem[0]).update(time_start=elem[1], time_end=elem[2], time_lenght=elem[3])
+
+            #Обновляем время Окончания ТГО
+            TGO.objects.filter(tgo_object__id = int(valueEndRow[0][0])).update(tgo_length=valueEndRow[0][2])
     else:
         print('Вы не являетесь владельцом этой записи')
             

@@ -36,7 +36,8 @@ class TGO(models.Model):
     title = models.CharField(max_length=150, db_index=True, verbose_name="ТГО")  
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     time_update = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
-
+    tgo_length =  models.CharField(max_length=10, verbose_name="Время", blank='True', default='')
+      
     class Meta:
         verbose_name = 'ТГО'
         verbose_name_plural = '3 ТГО'

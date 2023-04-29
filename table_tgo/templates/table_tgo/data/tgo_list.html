@@ -20,6 +20,7 @@
         <tr>
             <th>ТГО {% button_add 'table_tgo:create_tgo' %}</th>
             <th>Дата создания</th>
+            <th>Время</th>
             <th></th>
             <th></th>
             <th></th>
@@ -32,6 +33,7 @@
             <tr>
                 <td>{{t.title}}</td>
                 <td>{{t.time_create|date:"d-m-Y"}}</td>
+                <td>{{t.tgo_length}}</td>
                 <td>
                     <form method='post' action="{{ t.get_absolute_url }}">
                         {% csrf_token %}

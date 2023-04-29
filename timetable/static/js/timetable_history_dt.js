@@ -16,6 +16,9 @@ $(document).ready(function () {
             // cascadePanes: true,
             initCollapsed: true,
          },
+         
+         "iDisplayLength": -1,  
+         order: [[0, 'desc']],
          stateSaveParams: function (s, data) {
             //выбор строки
             data.selected = this.api().rows({selected:true})[0];
