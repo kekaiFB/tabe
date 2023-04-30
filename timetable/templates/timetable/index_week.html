@@ -1,0 +1,138 @@
+{% extends "timetable/base.html" %}
+{% load tgo_tags %}
+{% load timetable_tags %}
+{% block content %}
+    
+    {% include 'table/navbar.html' %}
+    
+    <h4 class="ml-2">
+            <span class="h4">{{title_timetable}}</span>
+            <br>
+            <div class="mt-2">
+                <a class="btn btn-outline-primary" href="{% url 'timetable:timetable_list' %}">Назад</a>
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Справочники
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="{% url 'timetable:airlines' %}">Авиакомпании</a>
+                    <a class="dropdown-item" href="{% url 'timetable:airplane' %}">Воздушные судна</a>
+                    <a class="dropdown-item" href="{% url 'timetable:country' %}">Страны</a>
+                    <a class="dropdown-item" href="{% url 'timetable:city' %}">Города</a>
+                    <a class="dropdown-item" href="{% url 'timetable:airport' %}">Аэропорты</a>
+                    <a class="dropdown-item" href="{% url 'timetable:flight' %}">Рейсы</a>
+                    <hr>
+                    <a class="dropdown-item" href="{% url 'timetable:timetableStatus' %}">Статусы Рейсов</a>
+                </div>
+               
+                <a class="btn btn-outline-primary  modalButton" data-form-url="{% url 'timetable:add_timetable_week' timetable_id %}">Добавить</a>
+                <span id="timetable-resetFilter" class="btn btn-outline-success">Сбросить фильтры</span>
+            </div>
+          <hr>
+    </h4> 
+
+    <table id="timetable" class="table table-bordered table-hover table-condensed"  cellspacing="0"  style="width:100%">
+        <thead> 
+            <tr>
+                <th rowspan="2">День</th>
+                <th colspan="5" class="h5" style="text-align: center;">Рейс</th>
+                <th colspan="6" class="h5" style="text-align: center;">Время</th>
+                <th colspan="3" class="h5" style="text-align: center;">Период</th>
+
+                <th rowspan="2" class="h5">ТГО (мин.)</th>
+                <th rowspan="2" class="h5">Статус</th>
+                <th rowspan="2" class="h5">Комментарий</th>
+                <th rowspan="2"></th>
+                <th rowspan="2"></th>
+            </tr>
+            <tr>
+                <th>Аваиакомпания</th>
+                <th>Рейс</th>
+                <th>Тип</th>
+                <th>Путь</th>
+                <th>Базовый аэропорт</th>
+                
+                <th>Прилет</th>
+                <th>Начало Регистрации</th>
+                <th>Конец Регистрации</th>
+                <th>Вылет</th>
+                <th>Стоянка</th>
+                <th>Следующий день</th>
+
+                <th>С</th>
+                <th>По</th>
+                <th>Период (дни)</th>
+            </tr>
+
+            <tr style="display: none;" class="forFilter">
+                <th>День</th>
+                <th>Аваиакомпания</th>
+                <th>Рейс</th>
+                <th>Тип</th>
+                <th>Путь</th>
+                <th>Базовый аэропорт</th>
+                
+                <th>Прилет</th>
+                <th>Начало Регистрации</th>
+                <th>Конец Регистрации</th>
+                <th>Вылет</th>
+                <th>Стоянка</th>
+                <th>Следующий день</th>
+
+                <th>С</th>
+                <th>По</th>
+                <th>Период</th>
+                
+
+                <th>ТГО</th>
+                <th>Статус</th>
+                <th>Комментарий</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>  
+            {% for t, th in timetable %}
+                {% for dw in days_week %}
+                    {% check_days_week dw t as days_week_status %}
+
+                    {% if days_week_status != None %}
+                        <tr style="background-color: {% background t.timetablestatusight %}; color: {% color t.timetablestatusight %}">
+                            <td>
+                                {{ days_week_status }}
+                            </td>
+                            {% classTimetable t.airline 'airline' th %}
+                            {% classTimetable t.flight 'flight' th %}
+            
+                            {% classTimetable t.flight.type_flight 'flight' th %}
+                            {% classTimetable t.flight.get_path_flight 'flight' th %}
+            
+                            {% classTimetable t.flight.departurelAirport 'departurelAirport' th %}
+            
+                            {% classTimetable t.arrival_time 'arrival_time' th %}
+                            {% classTimetable t.start_register_time 'start_register_time' th %}
+                            {% classTimetable t.end_register_time 'end_register_time' th %}
+                            {% classTimetable t.departure_time 'departure_time' th %}
+                            {% classTimetable t.parking 'departure_time' th %}
+            
+                            {% class_next_day_status t.next_day_status 'next_day_status' th %}
+            
+                            {% classTimetable t.date_start 'date_start' th %}
+                            {% classTimetable t.date_end 'date_end' th %}
+                            {% classTimetable t.date_lenght 'date_end' th %}
+            
+                            {% classTimetable t.tgo.tgo_length 'tgo' th %}
+                            {% classTimetable t.timetablestatusight 'timetablestatusight' th %}
+                            {% classTimetable t.comment 'comment' th %}
+                            <td>
+                                {% edit_button 'timetable:edit_timetable_week' t.id %}
+                            </td>
+                            <td>
+                                {% del_button 'timetable:delete_timetable_week' t.id %}
+                            </td>
+                        </tr>  
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

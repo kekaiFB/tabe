@@ -105,6 +105,26 @@ def color(timetablestatusight):
     return color
 
 
+@register.simple_tag
+def check_days_week(dw='', t=[]):
+    if t.monday and dw == 'monday':
+        return  1
+    elif t.tuesday and dw == 'tuesday':
+        return  2
+    elif t.wednesday and dw == 'wednesday':
+        return  3
+    elif t.thursday and dw == 'thursday':
+        return  4
+    elif t.friday and dw == 'friday':
+        return  5
+    elif t.saturday and dw == 'saturday':
+        return  6
+    elif t.sunday and dw == 'sunday':
+        return  7
+    else:
+        return None
+
+
 @register.inclusion_tag('timetable/my_tags/checkedBolean.html')
 def next_day_status(next_day_status=True):
     return {'next_day_status': next_day_status}
@@ -138,3 +158,22 @@ def class_next_day_status(t_value=0, t_label='', th = []):
             style = "#f9fae1"
     return { 't_value': t_value,  't_label': t_label, 'style': style, 'clas': clas}
 
+
+@register.simple_tag
+def label_week(dws=0):
+    if dws == 1:
+        return 'Понедельник'
+    elif dws == 2:
+        return 'Втроник'
+    elif dws == 3:
+        return 'Среда'
+    elif dws == 4:
+        return 'Четверг'
+    elif dws == 5:
+        return 'Пятница'
+    elif dws == 6:
+        return 'Суббота'
+    elif dws == 7:
+        return 'Воскресенье'
+    else:
+        pass

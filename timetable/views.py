@@ -15,7 +15,6 @@ from django.contrib.auth.decorators import login_required
 from .templatetags.timetable_tags import timetable_history_tag
 
 from django.http import JsonResponse
-from django.template.loader import render_to_string 
 
 # ---------------------------------Расписания----------------------
 class TimetableListView(DataMixin, MyModel, ListView):
@@ -96,13 +95,14 @@ def copy_timetable(request, pk):
 
 # ---------------------------------Расписание----------------------
 class TimeTableView(DataMixin, MyModel, TemplateView):
-    template_name = 'timetable/index.html'
+    template_name = 'timetable/index_standart.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title=self.kwargs['title'])
         context = dict(list(context.items()) + list(c_def.items()))
 
+        #Делаем оосновной queryset + th для истории изменения
         t = Timetable.objects.filter(timetablelist = self.kwargs['id']).select_related()
         th = timetable_history_tag(t)
         context['timetable'] = zip(t, th)
@@ -110,11 +110,14 @@ class TimeTableView(DataMixin, MyModel, TemplateView):
         context['title_timetable'] = self.kwargs['title']
         context['timetable_id'] = self.kwargs['id']
 
+        #Для дней недели
+        days_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+        context['days_week'] = days_week
         author = None if not self.request.POST.get('author') else str(self.request.POST.get('author'))
         if author:
             context['author'] = author
+        
         return context
-       
         
     def post(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
@@ -169,6 +172,168 @@ class TimeTableDeleteView(MySuccesURL, BSModalDeleteView):
         else:
             return super(TimeTableDeleteView, self).form_valid(form)
 # -------------------------------------------------------------------
+
+
+# ---------------------------------Недельное расписание----------------------
+class TimeTableWeekView(DataMixin, MyModel, TemplateView):
+    template_name = 'timetable/index_week.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title=self.kwargs['title'])
+        context = dict(list(context.items()) + list(c_def.items()))
+
+        #Делаем оосновной queryset + th для истории изменения
+        t = Timetable.objects.filter(timetablelist = self.kwargs['id']).select_related()
+        th = timetable_history_tag(t)
+        context['timetable'] = zip(t, th)
+
+        context['title_timetable'] = self.kwargs['title']
+        context['timetable_id'] = self.kwargs['id']
+
+        #Для дней недели
+        days_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+        context['days_week'] = days_week
+        author = None if not self.request.POST.get('author') else str(self.request.POST.get('author'))
+        if author:
+            context['author'] = author
+        
+        return context
+        
+    def post(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+          
+
+class TimeTableWeekCreateView(MySuccesURLWeek, DataMixin, BSModalCreateView):
+    template_name = 'timetable/edit_data/createTimeTable.html'
+    form_class = TimeTableModelForm
+
+    def get_context_data(self, **kwargs):
+        context = super(TimeTableWeekCreateView, self).get_context_data(**kwargs)
+        context['form'] = TimeTableModelForm(
+        initial={
+        'timetablelist': self.request.resolver_match.kwargs['timetable_id'],
+        })
+        return context
+    
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        req_user = self.request.user
+        if str(instance.timetablelist.author) == str(req_user): 
+            instance = form.save(commit=False)
+            instance.author = req_user
+            instance.editor = req_user
+            return super().form_valid(form)
+        else:
+            raise forms.ValidationError(u"Вы не явялетесь владельцем этой записи")  
+
+
+class TimeTableWeekUpdateView(MySuccesURLWeek, DetailView, BSModalUpdateView):
+    model = Timetable
+    context_object_name = 'timetable'
+    template_name = 'timetable/edit_data/updateTimeTable.html'
+    form_class = TimeTableModelForm
+
+    def form_valid(self, form):
+        self.instance = form.save(commit=False)
+        if str(self.instance.author) == str(self.request.user): 
+            return super().form_valid(form)
+        else:
+            raise forms.ValidationError(u"Вы не явялетесь владельцем этой записи")
+
+class TimeTableWeekDeleteView(MySuccesURLWeek, BSModalDeleteView):
+    model = Timetable
+    template_name = 'table_tgo/edit_data/delete.html'
+
+    def form_valid(self, form):
+        self.object = self.get_object()
+        if str(self.object.author) != str(self.request.user): 
+            raise forms.ValidationError(u"Вы не явялетесь владельцем этой записи")
+        else:
+            return super(TimeTableWeekDeleteView, self).form_valid(form)
+# -------------------------------------------------------------------
+
+
+# ---------------------------------Сгруппированное недельное расписание----------------------
+class TimeTableWeekGroupView(DataMixin, MyModel, TemplateView):
+    template_name = 'timetable/index_week_group.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title=self.kwargs['title'])
+        context = dict(list(context.items()) + list(c_def.items()))
+
+        #Делаем оосновной queryset + th для истории изменения
+        t = Timetable.objects.filter(timetablelist = self.kwargs['id']).select_related()
+        th = timetable_history_tag(t)
+        context['timetable'] = zip(t, th)
+
+        context['title_timetable'] = self.kwargs['title']
+        context['timetable_id'] = self.kwargs['id']
+
+        #Для дней недели
+        days_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+        context['days_week'] = days_week
+        author = None if not self.request.POST.get('author') else str(self.request.POST.get('author'))
+        if author:
+            context['author'] = author
+        
+        return context
+       
+    def post(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+          
+
+class TimeTableWeekGroupCreateView(MySuccesURLWeekGroup, DataMixin, BSModalCreateView):
+    template_name = 'timetable/edit_data/createTimeTable.html'
+    form_class = TimeTableModelForm
+
+    def get_context_data(self, **kwargs):
+        context = super(TimeTableWeekGroupCreateView, self).get_context_data(**kwargs)
+        context['form'] = TimeTableModelForm(
+        initial={
+        'timetablelist': self.request.resolver_match.kwargs['timetable_id'],
+        })
+        return context
+    
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        req_user = self.request.user
+        if str(instance.timetablelist.author) == str(req_user): 
+            instance = form.save(commit=False)
+            instance.author = req_user
+            instance.editor = req_user
+            return super().form_valid(form)
+        else:
+            raise forms.ValidationError(u"Вы не явялетесь владельцем этой записи")  
+
+
+
+class TimeTableWeekGroupUpdateView(MySuccesURLWeekGroup, DetailView, BSModalUpdateView):
+    model = Timetable
+    context_object_name = 'timetable'
+    template_name = 'timetable/edit_data/updateTimeTable.html'
+    form_class = TimeTableModelForm
+
+    def form_valid(self, form):
+        self.instance = form.save(commit=False)
+        if str(self.instance.author) == str(self.request.user): 
+            return super().form_valid(form)
+        else:
+            raise forms.ValidationError(u"Вы не явялетесь владельцем этой записи")
+
+class TimeTableWeekGroupDeleteView(MySuccesURLWeekGroup, BSModalDeleteView):
+    model = Timetable
+    template_name = 'table_tgo/edit_data/delete.html'
+
+    def form_valid(self, form):
+        self.object = self.get_object()
+        if str(self.object.author) != str(self.request.user): 
+            raise forms.ValidationError(u"Вы не явялетесь владельцем этой записи")
+        else:
+            return super(TimeTableWeekGroupDeleteView, self).form_valid(form)
+# -------------------------------------------------------------------
+
 
 # ---------------------------------Авиакомпании----------------------
 class AirlinesView(DataMixin, MyModel, ListView):

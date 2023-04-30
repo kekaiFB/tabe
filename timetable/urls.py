@@ -10,11 +10,24 @@ urlpatterns = [
     path('delete_timetable_list/<int:pk>/',TimetableListDeleteView.as_view(), name='delete_timetable_list'),
     path('copy_timetable/<int:pk>', copy_timetable, name='copy_timetable'),
 
+    #-------------Расписание-----------------------------------------------------------------
     path("timetable/<str:title>/<int:id>/", TimeTableView.as_view(), name='index'),
     path('add_timetable/<int:timetable_id>/', TimeTableCreateView.as_view(), name='add_timetable'),
     path('edit_timetable/<int:pk>', TimeTableUpdateView.as_view(), name='edit_timetable'),
     path('delete_timetable/<int:pk>/', TimeTableDeleteView.as_view(), name='delete_timetable'),
-    
+
+    path("timetable_week/<str:title>/<int:id>", TimeTableWeekView.as_view(), name='index_week'),
+    path('add_timetable_week/<int:timetable_id>/', TimeTableWeekCreateView.as_view(), name='add_timetable_week'),
+    path('edit_timetable_week/<int:pk>', TimeTableWeekUpdateView.as_view(), name='edit_timetable_week'),
+    path('delete_timetable_week/<int:pk>/', TimeTableWeekDeleteView.as_view(), name='delete_timetable_week'),
+
+    path("timetable_week_group/<str:title>/<int:id>/", TimeTableWeekGroupView.as_view(), name='index_week_group'),
+    path('add_timetable_week_group/<int:timetable_id>/', TimeTableWeekGroupCreateView.as_view(), name='add_timetable_week_group'),
+    path('edit_timetable_week_group/<int:pk>', TimeTableWeekGroupUpdateView.as_view(), name='edit_timetable_week_group'),
+    path('delete_timetable_week_group/<int:pk>/', TimeTableWeekGroupDeleteView.as_view(), name='delete_timetable_week_group'),
+    #-------------Расписание конец-----------------------------------------------------------------
+
+
     path('airlines/', AirlinesView.as_view(), name='airlines'),
     path('add_airlines/', AirlinesCreateView.as_view(), name='add_airlines'),
     path('edit_airlines/<int:pk>', AirlinesUpdateView.as_view(), name='edit_airlines'),

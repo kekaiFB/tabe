@@ -28,8 +28,10 @@
         <thead>
             <tr>
                 <th>Автор</th>
-                <th>Плановое расписание</th>
+                <th>Название</th>
                 <th>Дата создания</th>
+                <th></th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -46,7 +48,24 @@
                         <form method='post' action="{{ t.get_absolute_url }}">
                             {% csrf_token %}
                             <input type="hidden"  name="author" value={{ t.author }}> 
-                            <button href="#" type="submit" class="btn btn-outline-primary">Подробнее...</button>
+                            <input type="hidden"  name="type_timetable" value="index_standart"> 
+                            <button href="#" type="submit" class="btn btn-outline-primary">Расписание</button>
+                        </form>   
+                    </td>
+                    <td>
+                        <form method='post' action="{% url 'timetable:index_week' t.title t.id %}">
+                            {% csrf_token %}
+                            <input type="hidden"  name="author" value={{ t.author }}> 
+                            <input type="hidden"  name="type_timetable" value="index_week"> 
+                            <button href="#" type="submit" class="btn btn-outline-primary">Недельное расписание</button>
+                        </form>   
+                    </td>
+                    <td>
+                        <form method='post' action="{% url 'timetable:index_week_group' t.title t.id %}">
+                            {% csrf_token %}
+                            <input type="hidden"  name="author" value={{ t.author }}> 
+                            <input type="hidden"  name="type_timetable" value="index_week_group"> 
+                            <button href="#" type="submit" class="btn btn-outline-primary">Сгруппированное расписание</button>
                         </form>   
                     </td>
                     <td>

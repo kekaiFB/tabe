@@ -264,4 +264,5 @@ class Timetable(models.Model):
                 return str(res)[:-3]
         else:
             return str(dt - at)[:-3]
+        
             

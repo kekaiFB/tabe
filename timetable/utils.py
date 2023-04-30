@@ -8,6 +8,7 @@ class DataMixin(LoginRequiredMixin):
     
     def get_user_context(self, **kwargs):
         context = kwargs
+        context['prev_url'] = self.request.META.get('HTTP_REFERER')
         return context
 
 class MySuccesURL(LoginRequiredMixin):
@@ -15,6 +16,20 @@ class MySuccesURL(LoginRequiredMixin):
         id = self.object.timetablelist.id
         title = self.object.timetablelist.title
         return reverse_lazy('timetable:index', kwargs={'id': id, 'title': title})
+    
+
+class MySuccesURLWeek(LoginRequiredMixin):
+    def get_success_url(self):
+        id = self.object.timetablelist.id
+        title = self.object.timetablelist.title
+        return reverse_lazy('timetable:index_week', kwargs={'id': id, 'title': title})
+    
+
+class MySuccesURLWeekGroup(LoginRequiredMixin):
+    def get_success_url(self):
+        id = self.object.timetablelist.id
+        title = self.object.timetablelist.title
+        return reverse_lazy('timetable:index_week_group', kwargs={'id': id, 'title': title})
 
 
 menu = [{'title': "Авиакомпании", 'url_name': 'timetable:airlines'},
