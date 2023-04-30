@@ -89,7 +89,6 @@ def copy_timetable(request, pk):
         timetable_obj.save()
 
     return HttpResponseRedirect(reverse('timetable:timetable_list'))
-
 # -------------------------------------------------------------------
 
 

@@ -55,12 +55,18 @@
       <script src="{% static 'js/timetable_history_dt.js' %}"></script>
       <script src="{% static 'js/timetable_list_dt.js' %}"></script>
       <script src="{% static 'js/timetable_week_group.js' %}"></script>
+      <script src="{% static 'js/export.js' %}"></script>
       
       <!-- ModalForm -->
       {% include 'table_tgo/data/modal.html' %}
       <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
       <script src="{% static 'js/modal.js' %}"></script>
       <!-- ModalForm END -->
+
+      <!-- DOCX -->
+      <script src="https://unpkg.com/docx@4.0.0/build/index.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+      <!-- END DOCX -->
 
       <script>
          $('[data-toggle=confirmation]').confirmation({

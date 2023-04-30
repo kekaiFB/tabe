@@ -27,7 +27,7 @@ urlpatterns = [
     path('delete_timetable_week_group/<int:pk>/', TimeTableWeekGroupDeleteView.as_view(), name='delete_timetable_week_group'),
     #-------------Расписание конец-----------------------------------------------------------------
 
-
+    
     path('airlines/', AirlinesView.as_view(), name='airlines'),
     path('add_airlines/', AirlinesCreateView.as_view(), name='add_airlines'),
     path('edit_airlines/<int:pk>', AirlinesUpdateView.as_view(), name='edit_airlines'),
