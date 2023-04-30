@@ -111,7 +111,7 @@ var table = $('#bootstrapdatatable').DataTable({
             
             if (title != '' && title != 'Изменить' && title != 'Удалить') {
                 //добавляем input 
-                $(cell).html('<input type="text" placeholder="' + title + '" />');
+                $(cell).html('<input class="form-control" style="width:100%" type="text" placeholder="' + title + '" />');
 
             } else {
                 $(cell).html('');

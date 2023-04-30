@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     #авторизация и регистрация
     'user.apps.UserConfig',
 
+    
+    #Для статических файлов
+    'whitenoise.runserver_nostatic',
     #опитимизация
     'debug_toolbar',
 
@@ -65,7 +68,12 @@ MIDDLEWARE = [
 
     #История изменений
     'simple_history.middleware.HistoryRequestMiddleware',
+
+    #Для статики
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+#Для статики
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = "dashboard.urls"
 
@@ -175,9 +183,6 @@ AUTH_PASSWORD_VALIDATORS = [
         }
     },
 ]
-
-CSRF_TRUSTED_ORIGINS = ['https://test.polyslot.ru']
-CSRF_COOKIE_DOMAIN = 'polyslot.ru'
 
 #Подтверждение почты
 EMAIL_HOST = config('EMAIL_HOST')
