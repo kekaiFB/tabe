@@ -150,7 +150,7 @@ class TimeTableCreateView(MySuccesURL, DataMixin, BSModalCreateView):
 class TimeTableUpdateView(MySuccesURL, DetailView, BSModalUpdateView):
     model = Timetable
     context_object_name = 'timetable'
-    template_name = 'timetable/edit_data/updateTimeTable.html'
+    template_name = 'timetable/edit_data/updateTimetable.html'
     form_class = TimeTableModelForm
 
     def form_valid(self, form):
