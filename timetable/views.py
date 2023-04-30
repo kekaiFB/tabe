@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from .templatetags.timetable_tags import timetable_history_tag
 
 from django.http import JsonResponse
+#MyBranch
 
 # ---------------------------------Расписания----------------------
 class TimetableListView(DataMixin, MyModel, ListView):
