@@ -19,7 +19,6 @@
   }
 
 .form input {
-    font-family: "Lato", sans-serif;
     outline: 0;
     background: #e7e4e4;
     width: 100%;
@@ -61,7 +60,6 @@
 
 body {
     background: #3d3d3d; 
-    font-family: "Lato", sans-serif;
   } 
 
 
@@ -72,3 +70,7 @@ body {
 .rightPosition {
   float: right;
 }  
+
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
