@@ -147,7 +147,7 @@ class TimeTableCreateView(MySuccesURL, DataMixin, BSModalCreateView):
 
 
 
-class TimeTableUpdateView(MySuccesURL, DetailView, BSModalUpdateView):
+class TimeTableUpdateView(MySuccesURL, BSModalUpdateView):
     model = Timetable
     context_object_name = 'timetable'
     template_name = 'timetable/edit_data/updateTimeTable.html'
@@ -227,7 +227,7 @@ class TimeTableWeekCreateView(MySuccesURLWeek, DataMixin, BSModalCreateView):
             raise forms.ValidationError(u"Вы не явялетесь владельцем этой записи")  
 
 
-class TimeTableWeekUpdateView(MySuccesURLWeek, DetailView, BSModalUpdateView):
+class TimeTableWeekUpdateView(MySuccesURLWeek, BSModalUpdateView):
     model = Timetable
     context_object_name = 'timetable'
     template_name = 'timetable/edit_data/updateTimeTable.html'
@@ -308,7 +308,7 @@ class TimeTableWeekGroupCreateView(MySuccesURLWeekGroup, DataMixin, BSModalCreat
 
 
 
-class TimeTableWeekGroupUpdateView(MySuccesURLWeekGroup, DetailView, BSModalUpdateView):
+class TimeTableWeekGroupUpdateView(MySuccesURLWeekGroup, BSModalUpdateView):
     model = Timetable
     context_object_name = 'timetable'
     template_name = 'timetable/edit_data/updateTimeTable.html'
