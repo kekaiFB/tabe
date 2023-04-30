@@ -9,12 +9,6 @@ from smart_selects.db_fields import ChainedForeignKey
 from simple_history.models import HistoricalRecords
 from table_tgo.models import TGO
 
-import locale
-locale.setlocale(
-    category=locale.LC_ALL,
-    locale="Russian"  # Note: do not use "de_DE" as it doesn't work
-)
-
 #------------------АВИАКОМПАНИИ---------------------------------------------------------
 class Airlines(models.Model):  
     title = models.CharField(max_length=150, verbose_name="Название")
